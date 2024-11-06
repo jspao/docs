@@ -35,6 +35,53 @@ PbootCMS 是全新内核且永久开源免费的 PHP 企业网站开发建设管
 
 [LayUI 文件下载](../assets/pbootcms/layui-v2.2.5.zip)
 
+### 后台修改
+
+1. 文件路径：`apps/home/controller/IndexController.php`
+
+2. 新增上传入口函数
+
+```php
+public function upload() {
+  $upload = upload('upload');
+  if (is_array($upload)) {
+      json(1, $upload);
+  } else {
+      json(0, $upload);
+  }
+}
+```
+
+3. 如果想要后台自定义表单展示图片的话则修改文件：`/apps/admin/view/default/content/form.html`
+
+```php
+<tbody>
+    {foreach $fields(key2,value2,num2)}
+      <tr>
+        <th>[value2->description]</th>
+        {php} $field=$value2->name {/php}
+        <td>
+        // 关键行代码
+        <script>
+          var fls = "[value->$field]"
+          if (fls.indexOf('/static/') >= 0) {
+            document.write("<a href=" + fls + " target='_blank'><img src=" + fls +" width='250' /></a>");
+          } else {
+            document.write(fls);
+          }
+        </script>
+    </td>
+    </tr>
+    {/foreach}
+    <tr>
+      <th>时间</th>
+      <td>[value->create_time]</td>
+  </tr>
+  </tbody>
+```
+
+4. 如果是留言列表需要展示图片的话，则修改 `message.html` 即可
+
 ### 基础示例
 
 这原本只是一个普通的 button，正是 upload 模块赋予了它“文件选择”的特殊技能。当然，你还可以随意定制它的样式，而不是只局限于按钮。
@@ -116,6 +163,8 @@ PbootCMS 是全新内核且永久开源免费的 PHP 企业网站开发建设管
 		<tr>
 			<td>headers</td>
 			<td>接口的请求头。如：<em>headers: {token: 'sasasas'}</em>。注：该参数为 layui 2.2.6 开始新增</td>
+      <td>-</td>
+      <td>-</td>
 		</tr>
 		<tr>
 			<td>accept</td>
@@ -125,7 +174,6 @@ PbootCMS 是全新内核且永久开源免费的 PHP 企业网站开发建设管
 		</tr>
 		<tr>
 			<td>acceptMime
-				<a name="acceptMime"></a>
 			</td>
 			<td>规定打开文件选择框时，筛选出的文件类型，值为用逗号隔开的 MIME 类型列表。如：
 				<br>
@@ -133,7 +181,7 @@ PbootCMS 是全新内核且永久开源免费的 PHP 企业网站开发建设管
 				<br>
 				<em>acceptMime: 'image/jpg, image/png'</em>（只显示 jpg 和 png 文件）
 				<br>
-				<span style="color: #FF5722;">注：该参数为 layui 2.2.6 开始新增</span>
+				<span>注：该参数为 layui 2.2.6 开始新增</span>
 			</td>
 			<td>string</td>
 			<td>images</td>
