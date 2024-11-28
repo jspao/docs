@@ -161,3 +161,12 @@ jQuery 是一个轻量级的 JavaScript 库，它简化了 HTML 文档的获取�
 </body>
 </html>
 ```
+
+## iframe 通讯
+
+``` js
+// 1、监听子页面消息
+window.addEventListener('LogOutStatus', function(event) { // next todo })
+// 2. 子页面向父页面发送完成消息
+window.parent.postMessage({ LogOutStatus: true })
+```
