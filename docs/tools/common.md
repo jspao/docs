@@ -7,6 +7,10 @@
 | 插件名称                     | 描述             |
 |---------------------------|------------------|
 |[TableConvert](https://tableconvert.com/html-to-markdown)| 一款table html 转 markdown table 的工具！|
+|[字库星球](https://www.mfonts.cn/)| 免费商用字体资源下载|
+|[Transfonter](https://transfonter.org/)| 字体转换工具，可以转换成web支持字体|
+|[Base64.Guru](https://base64.guru/converter/encode/image/svg)| svg 转 base64|
+|[字库星球](https://www.mfonts.cn/)| 免费商用字体资源下载|
 
 ## MacOS 相关
 
