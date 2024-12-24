@@ -779,7 +779,9 @@ jQuery(document).ready(function ($) {
 ## 幻灯片列表新增字段
 
 实例路由：`/admin.php?p=/Slide/index`
+
 控制层路径：`/apps/admin/controller/content/SlideController.php`
+
 渲染层路径：`/apps/admin/view/default/content/slide.html`
 
 **Tips：新增与编辑的渲染层代码是分开的，注意区分**
