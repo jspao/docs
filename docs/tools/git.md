@@ -146,7 +146,7 @@ git rebase upstream/master origin/master
 
 ## 代码回滚并以新的分支进行提交
 
-1. 查看git commit日志 找到想要回滚的记录
+1. 查看 git commit 日志 找到想要回滚的记录
 
 ```sh
 git log
@@ -154,25 +154,25 @@ git log
 
 2. 回滚分支指定的 commitID 为当前提交的标识（SHA-1）
 
-``` sh
+```sh
 git reset --hard commitID
 ```
 
 3. 创建一个新的分支，branchName 为新分支名称
 
-``` sh
+```sh
 git branch branchName
 ```
 
 4. 切换到新的分支
 
-``` sh
+```sh
 git checkout branchName
 ```
 
 5. 提交回退好的代码到远程分支，branchName 为本地分支名称
 
-``` sh
+```sh
 git push <远程主机名> <branchName>:<远程分支名称>
 ```
 
@@ -198,4 +198,52 @@ git reset --hard HEAD~1
 git merge --abort
 ```
 
+## 使用 rebase（变基）推送存在修改的远程分支
 
+比如我现在的代码关联的 2 个远程分支如下
+
+```sh
+lvp     ssh://git@1.1.1.1:50022/ysp/yzp-lvp.git (fetch)
+lvp     ssh://git@1.1.1.1:50022/ysp/yzp-lvp.git (push)
+origin  ssh://git@1.1.1.1:50022/ysp/yzp-base.git (fetch)
+origin  ssh://git@1.1.1.1:50022/ysp/yzp-base.git (push)
+```
+
+lvp 是业务分支，origin 是 base 分支，我现在是要将 origin 的 develop 分支的新的代码，推送到 lvp 的 develop 上
+
+实现步骤
+
+1. 确保本地有最新的 origin/develop 和 lvp/develop：
+
+```sh
+git fetch origin  # 拉取基础代码最新内容
+git fetch lvp     # 拉取业务代码最新内容
+```
+
+2. 创建一个临时分支（基于 origin/develop）：
+
+```sh
+git checkout -b temp-rebase origin/develop
+```
+
+3. 将 lvp/develop 的变更变基（rebase）到 temp-rebase：
+
+```sh
+git rebase lvp/develop
+```
+
+如果遇到冲突
+
+- 手动解决冲突。
+- git add <冲突文件>。
+- 继续变基：`git rebase --continue`
+
+4. 检查代码是否正常（运行测试，确保业务逻辑不受影响）
+5. 推送更新到 lvp/develop
+- 如果 lvp/develop 允许强制推送（个人分支） `git push lvp temp-rebase:develop --force`
+- 如果 lvp/develop 是受保护分支（如团队协作）
+```sh
+git checkout -b new-base-update  # 新建分支
+git push lvp new-base-update    # 推送新分支
+```
+- 然后 提 PR/MR 让团队审核合并。
