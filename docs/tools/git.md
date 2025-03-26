@@ -248,4 +248,7 @@ git push lvp new-base-update    # 推送新分支
 ```
 - 然后 提 PR/MR 让团队审核合并。
 
-提交完成之后，删除变基分支即可：`git branch -D temp-rebase`
+提交完成之后
+1. 切换会原来 base 的 develop 分支
+2. 删除变基分支即可：`git branch -D temp-rebase`
+3. 拉取最新的 lvp/develop 分支到本地即可
