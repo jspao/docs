@@ -183,3 +183,19 @@ git push <远程主机名> <branchName>:<远程分支名称>
 ```sh
 git push -f --set-upstream origin master:master
 ```
+
+## 回退最后一次合并
+
+如果合并已经完成并提交，你可以：这会回退到合并前的最后一个提交，丢弃合并提交。
+
+```sh
+git reset --hard HEAD~1
+```
+
+如果合并尚未提交：如果合并操作已经执行但尚未提交（即处于合并冲突解决状态），这会中止合并过程，并将你的工作区恢复到合并前的状态。
+
+```sh
+git merge --abort
+```
+
+
