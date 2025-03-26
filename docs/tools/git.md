@@ -200,20 +200,22 @@ git merge --abort
 
 ## 使用 rebase（变基）推送存在修改的远程分支
 
-比如我现在的代码关联的 2 个远程分支如下
+场景：lvp 是业务分支，origin 是 Base 分支，现在是要将 origin 的 develop 分支的新代码，推送到 lvp 的 develop 上
 
 ```sh
-lvp     ssh://git@1.1.1.1:50022/ysp/yzp-lvp.git (fetch)
-lvp     ssh://git@1.1.1.1:50022/ysp/yzp-lvp.git (push)
-origin  ssh://git@1.1.1.1:50022/ysp/yzp-base.git (fetch)
-origin  ssh://git@1.1.1.1:50022/ysp/yzp-base.git (push)
+lvp     ssh://git@1.1.1.1:1126/yyy/yyy-lvp.git (fetch)
+lvp     ssh://git@1.1.1.1:1126/yyy/yyy-lvp.git (push)
+origin  ssh://git@1.1.1.1:1126/yyy/yyy-base.git (fetch)
+origin  ssh://git@1.1.1.1:1126/yyy/yyy-base.git (push)
 ```
 
-lvp 是业务分支，origin 是 base 分支，我现在是要将 origin 的 develop 分支的新的代码，推送到 lvp 的 develop 上
+### 实现步骤
 
-实现步骤
+::: danger
+在执行下述步骤之前，一定要`提交当前分支代码到对应仓库中`，避免出现不可逆的代码问题
+:::
 
-1. 确保本地有最新的 origin/develop 和 lvp/develop：
+1. 确保本地有最新的 `origin/develop` 和 `lvp/develop`，如果不确定就先执行如下命令
 
 ```sh
 git fetch origin  # 拉取基础代码最新内容
@@ -232,23 +234,31 @@ git checkout -b temp-rebase origin/develop
 git rebase lvp/develop
 ```
 
-如果遇到冲突
+如果遇到冲突，则需要`手动解决冲突`，然后继续执行以下命令
 
-- 手动解决冲突。
-- git add <冲突文件>。
-- 继续变基：`git rebase --continue`
-
-4. 检查代码是否正常（运行测试，确保业务逻辑不受影响）
-5. 推送更新到 lvp/develop
-- 如果 lvp/develop 允许强制推送（个人分支） `git push lvp temp-rebase:develop --force`
-- 如果 lvp/develop 是受保护分支（如团队协作）
 ```sh
-git checkout -b new-base-update  # 新建分支
-git push lvp new-base-update    # 推送新分支
+# 添加冲突文件
+git add <冲突文件>
+# 继续变基
+git rebase --continue
 ```
-- 然后 提 PR/MR 让团队审核合并。
 
-提交完成之后
-1. 切换会原来 base 的 develop 分支
-2. 删除变基分支即可：`git branch -D temp-rebase`
-3. 拉取最新的 lvp/develop 分支到本地即可
+4. 推送更新到 `lvp/develop`
+
+```sh
+# 如果 lvp/develop 允许强制推送（个人分支）
+git push lvp temp-rebase:develop --force
+
+# 如果 lvp/develop 是受保护分支（如团队协作）
+# 新建分支
+git checkout -b new-base-update
+# 推送新分支
+git push lvp new-base-update
+```
+
+然后 提 `PR/MR` 让团队审核合并。
+
+### 结束变基流程
+
+1. 切换回原来 `develop` 分支
+2. 删除变基分支：`git branch -D temp-rebase`
