@@ -247,3 +247,5 @@ git checkout -b new-base-update  # 新建分支
 git push lvp new-base-update    # 推送新分支
 ```
 - 然后 提 PR/MR 让团队审核合并。
+
+提交完成之后，删除变基分支即可：`git branch -D temp-rebase`
