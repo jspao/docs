@@ -260,5 +260,5 @@ git push lvp new-base-update
 
 ### 结束变基流程
 
-1. 切换回原来 `develop` 分支
+1. 切换回原来 `git checkout develop` 分支
 2. 删除变基分支：`git branch -D temp-rebase`
