@@ -262,3 +262,27 @@ git push lvp new-base-update
 
 1. 切换回原来 `git checkout develop` 分支
 2. 删除变基分支：`git branch -D temp-rebase`
+
+## 丢弃所有本地修改并使用远程仓库的代码
+
+``` sh
+# 1. 首先获取远程仓库的最新变更
+git fetch origin
+
+# 2. 丢弃所有本地未提交的修改（包括未跟踪的文件）
+git reset --hard HEAD
+git clean -fd
+
+# 3. 切换到目标分支（例如 develop 分支）
+git checkout develop
+
+# 4. 将本地分支重置为远程分支的状态
+git reset --hard origin/develop
+```
+
+**说明：**
+- git reset --hard HEAD 会丢弃所有已暂存和未暂存的本地修改
+- git clean -fd 会删除所有未跟踪的文件和目录
+- git reset --hard origin/main 会将本地分支完全同步到远程分支的状态
+
+这些操作是不可逆的，执行前请确保你确实想要丢弃所有本地修改。如果有需要保留的修改，请先提交或备份。
