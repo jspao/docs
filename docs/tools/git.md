@@ -286,3 +286,14 @@ git reset --hard origin/develop
 - git reset --hard origin/main 会将本地分支完全同步到远程分支的状态
 
 这些操作是不可逆的，执行前请确保你确实想要丢弃所有本地修改。如果有需要保留的修改，请先提交或备份。
+
+## 完全清楚缓存重新提交
+
+针对文件命名缓存
+
+```sh
+git rm -r --cached .       # 清除所有缓存
+git add .                  # 重新添加文件（Git 会识别正确的大小写）
+git commit -m "fix: enforce correct file casing"
+git push
+```
