@@ -36,7 +36,7 @@ export default {
     },
     footer: {
       message: "山与海都很美，努力走出去",
-      copyright: "© 2024 jspao.com",
+      copyright: "© 2025 jspao.com",
     },
     nav: [
       { text: "技术栈", link: "/technology/frame/vue", activeMatch: "/technology/" },
@@ -51,6 +51,8 @@ export default {
           { text: "Vue3官网", link: "https://cn.vuejs.org/api/" },
           { text: "VueUse官网", link: "https://vueuse.org/guide/" },
           { text: "NaiveUI官网", link: "https://www.naiveui.com/zh-CN/os-theme/components/button" },
+          { text: 'uni-app官网', link: "https://uniapp.dcloud.net.cn/"},
+          { text: 'ViteJS中文网网', link: 'https://vitejs.cn'}
         ],
       },
     ],
@@ -85,6 +87,7 @@ export default {
               { text: "Electron", link: "frame/electronjs" },
               { text: "UnoCSS", link: "frame/unocss" },
               { text: "Sass", link: "frame/sass" },
+              { text: "uni-app", link: "frame/uniapp" },
             ],
           },
           {

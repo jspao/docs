@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: "JS Pao"
-  text: "日常开发经验分享"
-  tagline: 一个程序员的工作与生活
+  name: "JSPAO.com"
+  text: "程序员的笔记本"
+  tagline: "做出伟大的工作的唯一途径是热爱自己所做的事"
   actions:
     - theme: brand
       text: 开始使用
@@ -29,7 +29,7 @@ features:
 ---
 
 ```js
-console.log("Hello, JSPao! 有什么过不去的坎呢？加油吧！");
+console.log("Hello, World!");
 ```
 
 <style>

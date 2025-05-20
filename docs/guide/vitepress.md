@@ -127,7 +127,7 @@ export default {
     // 底部信息
     footer: {
       message: "山与海都很美，努力走出去",
-      copyright: "© 2024 jspao.com",
+      copyright: "© 2025 jspao.com",
     },
     // 顶部导航栏
     nav: [
