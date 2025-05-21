@@ -10,6 +10,18 @@ CSS 能够对网页中元素位置的排版进行像素级精确控制，支持�
 
 `reset.css` 重置样式表的目的是减少浏览器在默认行高、边距和标题字体大小等方面的不一致
 
+## 文字渐变色
+
+```css
+.clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(123deg, #5e4eff 13.15%, #f14eff 79.65%);
+  color: transparent;
+  display: inline-block;
+}
+```
+
 ## 文本溢出省略号
 
 ```CSS
@@ -224,8 +236,8 @@ table td {
 
 ## Flex 布局规则
 
-Flex 布局，可以简便、完整、响应式地实现各种页面布局。目前，它已经得到了所有浏览器的支持，这意味着，现在就能很安全地使用这项功能【[MDN传送门](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex)】
-【[阮一峰Flex布局](https://www.ruanyifeng.com/blog/2015/07/flex-examples.html)】
+Flex 布局，可以简便、完整、响应式地实现各种页面布局。目前，它已经得到了所有浏览器的支持，这意味着，现在就能很安全地使用这项功能【[MDN 传送门](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex)】
+【[阮一峰 Flex 布局](https://www.ruanyifeng.com/blog/2015/07/flex-examples.html)】
 
 ## BEM（Block, Element, Modifier）
 
