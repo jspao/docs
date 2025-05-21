@@ -124,6 +124,7 @@ export default {
               { text: "VSCode", link: "vscode" },
               { text: "Linux", link: "linux" },
               { text: "Docker", link: "docker" },
+              { text: "ADB", link: "adb" },
               { text: "日常笔记", link: "common" },
             ],
           },
