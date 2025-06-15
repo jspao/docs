@@ -42,7 +42,7 @@ git bash 进入指定工程，然后执行命令 `find . -name "._*"|xargs rm`
 
 - DIN Alternate 用在数字上，很好用 [下载字体文件](/fonts/d_din_pro.zip)
 
-## 堡垒机提权及上传文件步骤
+## Linux提权及上传文件步骤
 
 ``` sh
 # 进入指定项目目录

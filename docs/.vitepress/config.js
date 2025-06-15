@@ -88,6 +88,7 @@ export default {
               { text: "UnoCSS", link: "frame/unocss" },
               { text: "Sass", link: "frame/sass" },
               { text: "uni-app", link: "frame/uniapp" },
+              { text: "i18n", link: "frame/i18n" },
             ],
           },
           {

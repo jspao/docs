@@ -4,6 +4,42 @@
 
 PbootCMS 是全新内核且永久开源免费的 PHP 企业网站开发建设管理系统，是一套高效、简洁、 强悍的可免费商用的 PHP CMS 源码，能够满足各类企业网站开发建设的需要。系统采用简单到想哭的模板标签，只要懂 HTML 就可快速开发企业网站。
 
+## 多语言调用内容列表 API
+
+标准[文档地址](https://www.pbootcms.com/docs/237.html)，在使用多语言且列表数据使用官方 api 【指定内容列表接口】来进行调用的话，需要添加`acode`字段，传输指定语言
+
+```js
+$(document).ready(function (e) {
+  var url = "http://IP/api.php/list/*/page/2/num/12";
+  $.ajax({
+    type: "POST",
+    url: url,
+    dataType: "json",
+    data: {
+      // 最重要的代码 acode 需要指定语言，如：en
+      acode: 'en',
+      appid: "{pboot:appid}",
+      timestamp: "{pboot:timestamp}",
+      signature: "{pboot:signature}",
+    },
+
+    success: function (response, status) {
+      if (response.code) {
+        //获取数据成功
+        alert(response.data.title);
+      } else {
+        //返回错误数据
+        alert(response.data);
+      }
+    },
+    error: function (xhr, status, error) {
+      //返回数据异常
+      alert("返回数据异常！");
+    },
+  });
+});
+```
+
 ## 剔除 url 后的 /
 
 路径：`\core\basic`
@@ -803,15 +839,15 @@ public function add()
       // 新增字段
       $desc = post('desc');
       $sorting = post('sorting', 'int');
-      
+
       if (! $gid) {
           $gid = $this->model->getMaxGid() + 1;
       }
-      
+
       if (! $pic) {
           alert_back('图片不能为空！');
       }
-      
+
       // 构建数据
       $data = array(
           'acode' => session('acode'),
@@ -826,7 +862,7 @@ public function add()
           'create_user' => session('username'),
           'update_user' => session('username')
       );
-      
+
       // 执行添加
       if ($this->model->addSlide($data)) {
           $this->log('新增轮播图成功！');
@@ -863,11 +899,11 @@ public function mod()
               break;
       }
   }
-  
+
   if (! $id = get('id', 'int')) {
       error('传递的参数值错误！', - 1);
   }
-  
+
   // 单独修改状态
   if (($field = get('field', 'var')) && ! is_null($value = get('value', 'var'))) {
       if ($this->model->modSlide($id, "$field='$value',update_user='" . session('username') . "'")) {
@@ -876,10 +912,10 @@ public function mod()
           alert_back('修改失败！');
       }
   }
-  
+
   // 修改操作
   if ($_POST) {
-      
+
       // 获取数据
       $gid = post('gid', 'int');
       $pic = post('pic');
@@ -889,15 +925,15 @@ public function mod()
       // 新增的字段
       $desc = post('desc');
       $sorting = post('sorting', 'int');
-      
+
       if (! $gid) {
           $gid = $this->model->getMaxGid() + 1;
       }
-      
+
       if (! $pic) {
           alert_back('图片不能为空！');
       }
-      
+
       // 构建数据
       $data = array(
           'gid' => $gid,
@@ -910,7 +946,7 @@ public function mod()
           'sorting' => $sorting,
           'update_user' => session('username')
       );
-      
+
       // 执行添加
       if ($this->model->modSlide($id, $data)) {
           $this->log('修改轮播图' . $id . '成功！');
@@ -938,18 +974,24 @@ public function mod()
 ```html [slide.html]
 <!-- 新增逻辑代码 -->
 <div class="layui-form-item">
-   <label class="layui-form-label">描述</label>
-   <div class="layui-input-block">
-        <textarea name="desc" placeholder="请输入描述" class="layui-textarea"></textarea>
-   </div>
+  <label class="layui-form-label">描述</label>
+  <div class="layui-input-block">
+    <textarea
+      name="desc"
+      placeholder="请输入描述"
+      class="layui-textarea"
+    ></textarea>
+  </div>
 </div>
 
 <!-- 编辑逻辑代码 -->
 <div class="layui-form-item">
-   <label class="layui-form-label">描述</label>
-   <div class="layui-input-block">
-        <textarea name="desc" placeholder="请输入描述" class="layui-textarea">{php}echo str_replace('<br>', "\r\n", @$this->getVar('slide')->desc);{/php}</textarea>
-   </div>
+  <label class="layui-form-label">描述</label>
+  <div class="layui-input-block">
+    <textarea name="desc" placeholder="请输入描述" class="layui-textarea">
+{php}echo str_replace('<br>', "\r\n", @$this->getVar('slide')->desc);{/php}</textarea
+    >
+  </div>
 </div>
 ```
 
