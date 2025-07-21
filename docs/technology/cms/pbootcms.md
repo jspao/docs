@@ -4,6 +4,38 @@
 
 PbootCMS 是全新内核且永久开源免费的 PHP 企业网站开发建设管理系统，是一套高效、简洁、 强悍的可免费商用的 PHP CMS 源码，能够满足各类企业网站开发建设的需要。系统采用简单到想哭的模板标签，只要懂 HTML 就可快速开发企业网站。
 
+## 首页携带参数会引发301重定向问题
+
+1. 找到文件 `apps/home/controller/IndexController.php`
+2. 找到如下代码 `header("Location: " . $http . $_SERVER['HTTP_HOST'] . $matches1[0], true, 301);` 替换成 `$this->getIndexPage();`
+``` php
+ if ($matches1[0]) {
+   if ($_SERVER['REQUEST_URI'] == $matches1[0]) {
+       $this->getIndexPage();
+   } elseif (strpos($matches1[0], '/?page=') !== false) {
+       $this->getIndexPage();
+   } else {
+       //读取后台首页404访问配置
+       if ($this->config('url_index_404') == 1) {
+           _404('您访问的页面不存在，请核对后重试！');
+       }
+       header("Location: " . $http . $_SERVER['HTTP_HOST'] . $matches1[0], true, 301);
+   }
+} else {
+   _404('您访问的页面不存在，请核对后重试！');
+}
+```
+
+## 支持Google广告跳转参数（内页）
+
+1. 找到文件 `apps/home/controller/IndexController.php`
+2. 找到如下代码，在增加`if`判断条件`&& stripos(URL,'/?gad_source') == false`,其它参数同理
+``` php
+if (stripos(URL, '?') !== false && stripos(URL, '/?tag=') == false && stripos(URL, '/?page=') == false && stripos(URL, '/?ext_') == false) {
+  _404('您访问的内容不存在，请核对后重试！');
+}
+```
+
 ## 多语言调用内容列表 API
 
 标准[文档地址](https://www.pbootcms.com/docs/237.html)，在使用多语言且列表数据使用官方 api 【指定内容列表接口】来进行调用的话，需要添加`acode`字段，传输指定语言
