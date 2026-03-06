@@ -1,47 +1,90 @@
-# Sass
+# Sass 样式预处理指南
 
-[中文文档入口](https://sass.bootcss.com/documentation.html)
+Sass 是一款强大的 CSS 预处理器，通过变量、嵌套、混合、函数等特性，让 CSS 开发更加高效、可维护。
 
-Sass 是一种 CSS 的预编译语言。它提供了 变量（variables）、嵌套（nested rules）、 混合（mixins）、 函数（functions）等功能，并且完全兼容 CSS 语法。Sass 能够帮助复杂的样式表更有条理， 并且易于在项目内部或跨项目共享设计。
+> **官方文档**：[Sass 中文文档](https://sass.bootcss.com/documentation.html)
 
-## Live Sass 编译器
+## 核心特性
+
+| 特性 | 说明 | 示例 |
+|------|------|------|
+| **变量** | 存储可复用的值 | `$primary: #007bff;` |
+| **嵌套** | 层级化的选择器结构 | `.nav { .item { ... } }` |
+| **混合** | 可复用的样式块 | `@mixin flex { ... }` |
+| **函数** | 计算和转换 | `darken($color, 10%)` |
+| **继承** | 选择器复用 | `@extend .btn;` |
+
+## VS Code 插件：Live Sass Compiler
+
+实时编译 Sass/SCSS 为 CSS 的 VS Code 插件。
 
 Visual Studio Code插件Live Sass Compiler可将Sass或Scss实时编译为CSS
 
 [Live Sass Compiler](https://www.sass.hk/skill/sass154.html?tdsourcetag=s_pcqq_aiomsg#google_vignette)
 
-### 用法/快捷方式
-  1. Watch Sass从状态栏单击以打开实时编译，然后Stop Watching Sass从状态栏单击以打开实时编译。 
-  2. 按F1或ctrl+shift+P键入Live Sass: Watch Sass以开始实时编译，或者按键入Live Sass: Stop Watching Sass以停止实时编译。
-  3. 按F1或ctrl+shift+P键入一次Live Sass: Compile Sass - Without Watch Mode 以编译Sass或Scss。
-### 特征
-  1. 实时SASS和SCSS编译。
-  2. 导出CSS的可自定义文件位置。
-  3. 可定制的导出CSS样式（expanded，compact，compressed，nested）。
-  4. 可自定义的扩展名（.css或.min.css）。
-  5. 快速状态栏控件。
-  6. 通过设置排除特定文件夹。
-  7. 实时重新加载（取决于Live Server扩展名）。
-  8. 支持自动前缀
-  9. 更多参数设置 [传送门](https://github.com/ritwickdey/vscode-live-sass-compiler/blob/master/docs/settings.md)
-### 参数配置
+### 快速开始
+
+| 操作 | 方式 |
+|------|------|
+| **启动实时编译** | 点击状态栏 "Watch Sass" 或按 `F1` 输入 `Live Sass: Watch Sass` |
+| **停止实时编译** | 点击状态栏 "Stop Watching Sass" 或按 `F1` 输入 `Live Sass: Stop Watching Sass` |
+| **单次编译** | 按 `F1` 输入 `Live Sass: Compile Sass - Without Watch Mode` |
+
+### 插件特性
+
+- **实时编译**：保存文件时自动编译
+- **自定义输出路径**：灵活配置 CSS 输出位置
+- **多种输出格式**：expanded、compact、compressed、nested
+- **自动前缀**：自动添加浏览器前缀
+- **实时重载**：配合 Live Server 实现自动刷新
+- **排除文件夹**：可设置忽略特定目录
+
+> 更多设置请参考 [官方文档](https://github.com/ritwickdey/vscode-live-sass-compiler/blob/master/docs/settings.md)
+### 配置示例
+
+在项目根目录创建 `.vscode/settings.json`：
 
 ```json
- "liveSassCompile.settings.formats":[
-  // 扩展
-  {
-      "format": "compact", //可定制的出口CSS样式（expanded，compact，compressed，nested）
-      "extensionName": ".min.css", //编译后缀名
-      "savePath": "~/./css" //编译保存的路径
-  } 
-],
-"liveSassCompile.settings.excludeList": [
-  "**/node_modules/**",
-  ".vscode/**"
-],
+{
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "compact",
+      "extensionName": ".min.css",
+      "savePath": "/dist/css"
+    }
+  ],
+  "liveSassCompile.settings.excludeList": [
+    "**/node_modules/**",
+    ".vscode/**"
+  ],
+  "liveSassCompile.settings.autoprefix": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
 ```
 
-## 编写一个 BEM Mixin
+| 配置项 | 说明 |
+|--------|------|
+| `format` | 输出格式：expanded、compact、compressed、nested |
+| `extensionName` | 输出文件后缀：`.css` 或 `.min.css` |
+| `savePath` | CSS 输出路径 |
+| `excludeList` | 排除的目录 |
+| `autoprefix` | 自动前缀的浏览器支持范围 |
+
+## BEM 命名规范与 Mixin
+
+BEM（Block Element Modifier）是一种 CSS 命名方法论，通过块、元素、修饰符的结构化命名，提高代码的可维护性。
+
+### 命名规则
+
+| 类型 | 符号 | 示例 |
+|------|------|------|
+| **Block**（块） | 无前缀 | `.button` |
+| **Element**（元素） | `__` | `.button__icon` |
+| **Modifier**（修饰符） | `--` | `.button--primary` |
+
+### 编写 BEM Mixin
 
 ::: code-group
 

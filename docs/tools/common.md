@@ -1,58 +1,102 @@
-# 日常笔记
+# 开发工具箱
 
-日常一些小工具及随手记
+日常开发中常用的在线工具、系统命令和配置技巧。
 
-## 实用小工具
+## 在线工具推荐
 
-| 插件名称                     | 描述             |
-|---------------------------|------------------|
-|[TableConvert](https://tableconvert.com/html-to-markdown)| 一款table html 转 markdown table 的工具！|
-|[字库星球](https://www.mfonts.cn/)| 免费商用字体资源下载|
-|[Transfonter](https://transfonter.org/)| 字体转换工具，可以转换成web支持字体|
-|[Base64.Guru](https://base64.guru/converter/encode/image/svg)| svg 转 base64|
+| 工具名称 | 用途 | 链接 |
+|---------|------|------|
+| TableConvert | HTML 表格转 Markdown | [访问](https://tableconvert.com/html-to-markdown) |
+| 字库星球 | 免费商用字体下载 | [访问](https://www.mfonts.cn/) |
+| Transfonter | 字体格式转换（支持 Web 字体） | [访问](https://transfonter.org/) |
+| Base64.Guru | SVG 转 Base64 | [访问](https://base64.guru/converter/encode/image/svg) |
 
-## MacOS 相关
+## macOS 常用操作
 
-### 查当前机器IP
+### 查看本机 IP
 
-```sh
+```bash
+# 查看 WiFi 地址
 ipconfig getifaddr en0
+
+# 查看所有网络接口
+ifconfig
 ```
 
-### 查端口占用及kill
+### 端口管理
 
-```sh
-# 查端口
+```bash
+# 查看指定端口占用
 sudo lsof -i:8300
-# kill
-sudo kill -9 PID
+
+# 根据 PID 结束进程
+sudo kill -9 <PID>
+
+# 查看所有监听端口
+sudo lsof -i -P | grep LISTEN
 ```
 
-### MacOs 生成的._文件剔除方式
+### 清理系统文件
 
-git bash 进入指定工程，然后执行命令 `find . -name "._*"|xargs rm`
+macOS 会自动生成 `._` 开头的隐藏文件，上传到 Git 时可能造成污染：
 
-### 修改hosts配置
+```bash
+# 删除所有 ._ 文件
+find . -name "._*" | xargs rm
 
--  `sudo vi /etc/hosts`
--  输入本机密码后，打开hosts文件，键盘输入 i （插入），修改hosts文件后，按 esc 键退出,再按shift+：键，再输入w和q，保存退出
--  不保存退出，则按q和！键
+# 添加到 .gitignore
+.DS_Store
+._*
+```
 
-## UI设计
+### 修改 Hosts 文件
 
-- DIN Alternate 用在数字上，很好用 [下载字体文件](/fonts/d_din_pro.zip)
+```bash
+# 使用管理员权限编辑
+sudo vi /etc/hosts
 
-## Linux提权及上传文件步骤
+# 或使用 nano（对新手更友好）
+sudo nano /etc/hosts
+```
 
-``` sh
-# 进入指定项目目录
-# 创建目录
-mkdir node
-# 给目录设置权限，就可以上传文件了
-sudo chmod 777 node
-# 进入node文件夹
-cd node
-# 提升root权限,输入对应root密码
+编辑完成后：
+- `Ctrl + O` → 回车保存
+- `Ctrl + X` → 退出
+
+## 设计资源
+
+### 推荐字体
+
+| 字体 | 特点 | 下载 |
+|------|------|------|
+| DIN Alternate | 数字显示效果极佳 | [下载](/fonts/d_din_pro.zip) |
+
+## Linux 服务器操作
+
+### 文件上传准备
+
+```bash
+# 1. 创建目录
+mkdir project
+
+# 2. 设置权限（777 表示所有用户可读可写可执行）
+sudo chmod 777 project
+
+# 3. 进入目录
+cd project
+
+# 4. 切换 root 用户
 sudo su root
-# 最才可使用服务器内置的一些指令如：pnpm yarn ...
+
+# 5. 现在可以使用全局命令了
+pnpm install
+yarn install
 ```
+
+### 权限说明
+
+| 权限 | 数值 | 说明 |
+|------|------|------|
+| rwxrwxrwx | 777 | 所有用户完全控制 |
+| rwxr-xr-x | 755 | 所有者完全控制，其他只读 |
+| rw-r--r-- | 644 | 所有者读写，其他只读 |

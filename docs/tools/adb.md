@@ -1,53 +1,164 @@
-# adb
+# ADB 调试工具
 
-ADB 全称是 Android Debug Bridge（安卓调试桥），是 Android SDK（软件开发工具包）中的一个命令行工具，主要用于与 Android 设备进行通信和控制。它是开发人员和高级用户调试、测试、控制设备的重要工具。
+Android Debug Bridge（ADB）是 Android SDK 中的命令行工具，用于与 Android 设备进行通信和控制。它是开发人员进行设备调试、测试和控制的必备工具。
 
-非安卓开发临时测试工具推荐 [AYA](https://github.com/liriliri/aya/releases/tag/v1.10.0)，[文档地址](https://aya.liriliri.io/zh/guide/quickstart.html)
+::: tip 可视化工具推荐
+如果你不熟悉命令行，可以使用 [AYA](https://github.com/liriliri/aya/releases) 这款图形化工具，[使用文档](https://aya.liriliri.io/zh/guide/quickstart.html)。
+:::
 
-## adb 可以做什么
+## ADB 能做什么？
 
-ADB 让你可以通过电脑远程对 Android 手机或模拟器执行各种操作
+通过 ADB，你可以在电脑上远程控制 Android 设备：
 
-1. 安装或卸载应用程序
-2. 查看日志（logcat）
-3. 复制文件到设备或从设备复制文件
-4. 在设备上执行 shell 命令
-5. 重启设备或进入特定模式（如 recovery、bootloader）
-5. 进行屏幕录制或截图
-6. 模拟输入（如发送文本或点击）
+| 功能 | 说明 |
+|------|------|
+| 应用管理 | 安装、卸载、调试应用程序 |
+| 日志查看 | 实时查看设备运行日志（logcat） |
+| 文件传输 | 在电脑和设备间复制文件 |
+| 命令执行 | 在设备上执行 Shell 命令 |
+| 设备控制 | 重启、截图、录屏、模拟点击 |
+| 模式切换 | 进入 Recovery、Bootloader 等模式 |
 
+## 工作原理
 
-## ADB 的工作原理
+ADB 采用客户端-服务器架构：
 
-1. ADB 客户端（Client）：你在电脑上运行的命令。
-2. ADB 守护进程（Daemon）：运行在设备上的后台进程，接收命令。
-3. ADB 服务器（Server）：管理客户端和设备之间的通信。
-
-## 示例命令
-
-``` bash
-adb devices          # 查看已连接的设备
-adb install app.apk  # 安装 APK 应用
-adb shell            # 进入设备的命令行模式
-adb push a.txt /sdcard/  # 上传文件
-adb pull /sdcard/a.txt   # 下载文件
+```
+┌─────────────┐      ┌─────────────┐      ┌─────────────┐
+│   客户端     │ ───→ │   服务器     │ ───→ │  守护进程    │
+│  (Client)   │      │  (Server)   │      │  (Daemon)   │
+│   你的电脑   │      │  后台服务    │      │   设备端     │
+└─────────────┘      └─────────────┘      └─────────────┘
 ```
 
-## 下载方式 
+- **客户端**：你在电脑上运行的 ADB 命令
+- **服务器**：管理客户端和设备间的通信
+- **守护进程**：在设备后台运行，接收并执行命令
 
-ADB 是 Android SDK 的一部分。可以通过安装 Android Studio 或 命令行工具（Command line tools） 来获取。或者直接从 [Google 官方 SDK 平台工具](https://developer.android.com/tools/releases/platform-tools) 页面 下载。
+## 常用命令
 
-## 工作备注
+### 设备管理
 
-``` bash
-# abd 连接
-adb connect 192.168.11.2:60001
-# 启动
-adb shell am start -n 应用包名 --es actionUrl " http://baidu.com/"
-# 在webview中打开链接
-adb shell am start -n 应用包名 --es actionUrl "webViewUrl=http://baidu.com/"
-# 抓取日志
-adb logcat -v time > E:\xxx.log
-# 中心开启日志debug功能
+```bash
+# 查看已连接的设备
+adb devices
+
+# 连接网络设备（无线调试）
+adb connect 192.168.1.100:5555
+
+# 断开设备连接
+adb disconnect
+```
+
+### 应用管理
+
+```bash
+# 安装 APK
+adb install app.apk
+
+# 覆盖安装（保留数据）
+adb install -r app.apk
+
+# 卸载应用
+adb uninstall com.example.app
+```
+
+### 文件传输
+
+```bash
+# 推送文件到设备
+adb push local.txt /sdcard/
+
+# 从设备拉取文件
+adb pull /sdcard/file.txt ./
+```
+
+### 日志查看
+
+```bash
+# 查看实时日志
+adb logcat
+
+# 带时间戳的日志
+adb logcat -v time
+
+# 保存日志到文件
+adb logcat -v time > app.log
+
+# 过滤特定标签
+adb logcat -s TAG_NAME:D
+```
+
+### Shell 操作
+
+```bash
+# 进入设备 Shell
+adb shell
+
+# 执行单条命令
+adb shell ls /sdcard
+adb shell pm list packages  # 列出所有应用包名
+```
+
+## 安装方式
+
+### 方式一：Android Studio（推荐）
+
+安装 [Android Studio](https://developer.android.com/studio) 会自动包含 ADB 工具。
+
+### 方式二：独立 SDK 工具
+
+从 [Google 官方](https://developer.android.com/tools/releases/platform-tools) 下载平台工具包，解压后配置环境变量。
+
+### 方式三：包管理器
+
+```bash
+# macOS (Homebrew)
+brew install android-platform-tools
+
+# Windows (Scoop)
+scoop install adb
+
+# Linux (apt)
+sudo apt install android-tools-adb
+```
+
+## 实战示例
+
+### 无线调试配置
+
+```bash
+# 1. 先用 USB 连接设备，设置端口
+adb tcpip 5555
+
+# 2. 断开 USB，连接 WiFi
+adb connect 192.168.1.100:5555
+
+# 3. 验证连接
+adb devices
+```
+
+### 启动应用并传参
+
+```bash
+# 启动应用
+adb shell am start -n com.example.app/.MainActivity
+
+# 启动并传递 URL
+adb shell am start -n com.example.app/.MainActivity \
+  --es actionUrl "https://baidu.com"
+
+# 在 WebView 中打开
+adb shell am start -n com.example.app/.MainActivity \
+  --es actionUrl "webViewUrl=https://baidu.com"
+```
+
+### 开启应用调试日志
+
+```bash
+# 创建调试标记文件
 adb shell touch /sdcard/Android/data/应用包名/files/DebugLog
+
+# 查看应用特定日志
+adb logcat | grep 应用包名
 ```

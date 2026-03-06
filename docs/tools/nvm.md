@@ -1,47 +1,89 @@
-# nvm
+# Node 版本管理器
 
-`nvm`**(Node Version Manager)** 是一款用于管理 `Node.js` 版本的工具，可以轻松地在一个系统中切换和安装多个 `Node.js` 版本。使用 nvm 可以让你轻松地升级或降级 `Node.js` 版本，也可以在同一台机器上同时使用多个版本的 `Node.js`。
+nvm (Node Version Manager) 让你在同一台机器上安装和切换多个 Node.js 版本，方便不同项目的需求。
 
 ## Windows 版本
 
-Windows 版本下载地址：【[传送门](https://github.com/coreybutler/nvm-windows/releases)】
+下载地址：[nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases)
 
-### 常用指令
+### 常用命令
 
-```sh
-# 安装指定版本的 node.js
-nvm install <version>
-# 切换到指定版本的 node.js
-nvm use <version>
-# 列出已安装的所有 node.js 版本
-nvm ls
-# 给指定版本创建别名
-nvm alias <name> <version>
-# 在指定版本下运行脚本
-nvm run <version> <script>
-# 显示当前正在使用的 node.js 版本
+```bash
+# 安装指定版本
+nvm install 18.20.0
+nvm install lts          # 安装最新 LTS 版本
+
+# 切换版本
+nvm use 18.20.0
+nvm use lts
+
+# 查看已安装版本
+nvm list
+
+# 查看当前使用版本
 nvm current
-# 卸载指定版本的 node.js
-nvm uninstall <version>
-# 查看nvm帮助
+
+# 设置默认版本
+nvm alias default 18.20.0
+
+# 卸载版本
+nvm uninstall 16.20.0
+
+# 查看帮助
 nvm help
 ```
 
-## MacOS 版本
+## macOS / Linux 版本
 
-### 常用指令
+macOS 推荐使用 `n` 作为版本管理器：
 
-```sh
-# 查看当前node.js版本列表
-n ls
-# 移除指定node.js版本
-n rm <version ...>
-# 删除安装过的node.js版本
-n uninstall
-# 安装指定版本node.js
-n install <version>
+```bash
+# 安装 n
+npm install -g n
+
 # 安装指定版本
-n <version>
+n 18.20.0
+
+# 安装最新 LTS 版本
+n lts
+
+# 安装最新版本
+n latest
+
+# 切换版本（交互式选择）
+n
+
+# 删除指定版本
+n rm 16.20.0
+
 # 查看帮助
-n -h
+n --help
+```
+
+## 版本选择建议
+
+| 场景 | 推荐版本 | 说明 |
+|------|---------|------|
+| 生产环境 | LTS | 长期支持，稳定可靠 |
+| 学习测试 | Latest | 体验最新特性 |
+| 老项目维护 | 项目指定版本 | 保持兼容性 |
+
+## 常见问题
+
+### 切换版本后命令不生效
+
+```bash
+# Windows：以管理员身份运行终端
+# macOS/Linux：检查权限
+sudo n 18.20.0
+```
+
+### 查看可用版本列表
+
+```bash
+# Windows
+nvm list available
+
+# macOS/Linux
+n ls-remote
 ```

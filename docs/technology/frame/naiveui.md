@@ -1,10 +1,25 @@
-# NaiveUI
+# Naive UI 实战指南
 
-NaiveUI 特殊场景记录，Naive UI 是一个 Vue3 的组件库。【[传送门](https://www.naiveui.com/zh-CN/os-theme/components/button)】
+Naive UI 是一个基于 Vue 3 的组件库，提供了丰富、美观、易用的 UI 组件。本文档记录了一些特殊场景下的使用技巧和实战经验。
 
-## 动态表单基础实现
+> **官方文档**：[Naive UI 组件文档](https://www.naiveui.com/zh-CN/os-theme/components/button)
 
-此处动态表单核心`Object.assign(obj, { type: 'array', })`该位置主要针对对象为Array类型的，如果不增加这个的话，会存在表单失焦现象
+## 核心特点
+
+| 特点 | 说明 |
+|------|------|
+| **TypeScript 支持** | 完整的类型定义，开发体验友好 |
+| **主题定制** | 灵活的主题配置系统 |
+| **Tree Shaking** | 按需引入，减小打包体积 |
+| **无障碍支持** | 完善的 ARIA 支持 |
+
+## 动态表单实现
+
+动态表单是 Naive UI 中常见的复杂场景。以下是基于 `h` 函数和动态组件的表单渲染方案。
+
+::: tip 关键技巧
+对于 Array 类型的表单字段，需要在规则中添加 `type: 'array'`，否则会出现表单失焦问题。
+:::
 
 ::: code-group
 

@@ -1,42 +1,60 @@
-# uni-app
+# UniApp 跨平台开发指南
 
-主要介绍几种开发场景及经验
+UniApp 是一个使用 Vue.js 开发跨平台应用的前端框架，支持编译到 iOS、Android、H5、小程序等多个平台。
 
-1. 推荐 UI: [uView](https://uiadmin.net/uview-plus/)
-2. uniapp 使用 typescript 版本
-3. 推荐仓库[uniapp-vue3-template](https://github.com/jspao/uniapp-vue3-template.git)，注意，该仓库代码如果生成 app 的话需要剔除 `package.json` 中的 `simple-git-hooks` 和 `czg` 依赖, 以及 `simple-git-hooks` 配套的设置
-4. 推荐分页组件[z-paging](https://z-paging.zxlee.cn/start/intro.html),全平台兼容，支持自定义下拉刷新、上拉加载更多，支持虚拟列表，支持自动管理空数据图、点击返回顶部，支持聊天分页、本地分页，支持展示最后更新时间，支持国际化等等。
+## 推荐资源
 
-后续开发模式，均基于`uniapp-vue3-template`仓库为例子来进行。
+| 资源 | 说明 | 链接 |
+|------|------|------|
+| **uView UI** | 基于 Vue 3 的移动端组件库 | [官网](https://uiadmin.net/uview-plus/) |
+| **z-paging** | 高性能分页组件，支持下拉刷新、上拉加载 | [文档](https://z-paging.zxlee.cn/start/intro.html) |
+| **项目模板** | Vue 3 + TypeScript 开发模板 | [GitHub](https://github.com/jspao/uniapp-vue3-template.git) |
 
-## 部分开发经验
+::: warning 模板使用注意
+使用 `uniapp-vue3-template` 模板生成 App 时，需要移除 `package.json` 中的 `simple-git-hooks` 和 `czg` 依赖及相关配置，避免构建问题。
+:::
 
-1. uView navbar 返回图标隐藏，将`left-icon=""`设置为空
-2. uni-app + zaping 业务页面的 `onShow()` 避免重复请求设置
+## 开发技巧
+
+### 导航栏配置
+
+| 需求 | 解决方案 |
+|------|----------|
+| 隐藏返回图标 | `left-icon=""` 设置为空 |
+| 自定义导航栏背景 | 设置为 `transparent`，否则主题色无法覆盖状态栏 |
+
+### 避免重复请求
+
+使用 `z-paging` 时，在 `onShow` 中避免重复加载数据：
 
 ```ts
-const isFirstLoad: any = ref(true);
+const isFirstLoad = ref(true);
 const pagingRef = ref<ZPagingRef>();
 
 onShow(async () => {
   if (!isFirstLoad.value) {
+    // 非首次进入，刷新数据
     pagingRef.value?.reload();
   } else {
+    // 首次进入，标记已加载
     isFirstLoad.value = false;
   }
 });
 ```
 
-3. 如果使用自定义 navbar 的话，则需要将其背景设置为 `transparent` 否则 app 打包 主题色将无法覆盖状态栏区域
+## 主题色开发模式
 
-## uniapp + 主题色开发模式
+实现动态主题切换（浅色/深色/跟随系统），需要以下文件配合：
 
-需要支持结构如下
+| 文件 | 作用 |
+|------|------|
+| `src/store/modules/theme/index.ts` | 主题状态管理 |
+| `src/uni.scss` | 主题 CSS 变量定义 |
+| `src/pages/tab/home/index.vue` | 页面中使用主题 |
 
-1. `src/store/modules/theme/index.ts` 添加主题色配置
-2. `src/uni.scss` 添加主题色变量
-3. `src/pages/tab/home/index.vue` 使用主题色变量
-4. 注意，如果使用自定义 navbar 的话，则需要将其背景设置为`transparent`
+::: tip 注意事项
+使用自定义导航栏时，需将背景设为 `transparent`，否则主题色无法覆盖状态栏。
+:::
 
 ```vue
 <template>
@@ -189,15 +207,31 @@ $theme-color: var(--theme-color);
 
 :::
 
-## uniapp + i18n 开发模式
+## 国际化（i18n）开发模式
 
-1. 依赖支持 [vue-i18n](https://www.npmjs.com/package/vue-i18n)
-2. 封装依赖 `src/locales/index.ts`
-3. 封装插件 `src/plugins/index.ts`
-4. 注册插件 setupPlugins `src/main.ts`
-5. 定义语言 json 文件 `src/locales/langs`
-6. 应用语言 `src/pages/tab/home/index.vue`
-7. 切换语言 `src/pages/tab/user/index.vue` 及组件 `src/components/lang-picker/index.vue`
+基于 vue-i18n 实现多语言支持，主要文件结构如下：
+
+```
+src/
+├── locales/
+│   ├── index.ts       # i18n 配置入口
+│   └── langs/         # 语言文件目录
+│       ├── en.ts
+│       └── zh-Hans.ts
+├── plugins/
+│   └── index.ts       # 插件封装
+├── main.ts            # 注册插件
+└── pages/
+    ├── tab/
+    │   ├── home/      # 应用语言
+    │   └── user/      # 切换语言
+    └── components/
+        └── lang-picker/  # 语言选择组件
+```
+
+### 核心依赖
+
+- [vue-i18n](https://www.npmjs.com/package/vue-i18n) - Vue 官方国际化插件
 
 ::: code-group
 
@@ -485,9 +519,18 @@ export default function useTabbar() {
 }
 ```
 
-## uniapp + zaping 开发模式
+## z-paging 分页组件使用
 
-分页组件[z-paging](https://z-paging.zxlee.cn/start/intro.html),全平台兼容，支持自定义下拉刷新、上拉加载更多，支持虚拟列表，支持自动管理空数据图、点击返回顶部，支持聊天分页、本地分页，支持展示最后更新时间，支持国际化等等。
+[z-paging](https://z-paging.zxlee.cn/start/intro.html) 是 UniApp 生态中功能最完善的分页组件，特性包括：
+
+- **全平台兼容**：支持 H5、小程序、App
+- **下拉刷新**：自定义刷新动画和文字
+- **上拉加载**：自动加载更多数据
+- **虚拟列表**：大数据量下流畅滚动
+- **空数据管理**：自动显示空数据占位图
+- **国际化**：支持多语言切换
+
+### 常用模式速查
 
 ### 上下结构 + 左右插槽 + 自定义 loading 文字
 

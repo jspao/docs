@@ -1,13 +1,32 @@
-# Vue 2 & Vue 3
+# Vue 2 & Vue 3 实战指南
 
-Vue (发音为 /vjuː/，类似 view) 是一款用于构建用户界面的 JavaScript 框架。它基于标准 HTML、CSS 和 JavaScript 构建，并提供了一套声明式的、组件化的编程模型，帮助你高效地开发用户界面。无论是简单还是复杂的界面，Vue 都可以胜任。[传送门](https://cn.vuejs.org/guide/introduction)
+Vue 是一款渐进式 JavaScript 框架，用于构建用户界面。它基于标准 HTML、CSS 和 JavaScript，提供声明式、组件化的编程模型，让开发更加高效。
 
-## 各类解决方案
+> **官方文档**：[Vue 3 中文文档](https://cn.vuejs.org/guide/introduction)
+
+## 版本对比
+
+| 特性 | Vue 2 | Vue 3 |
+|------|-------|-------|
+| **API 风格** | Options API | Options API + Composition API |
+| **响应式原理** | Object.defineProperty | Proxy |
+| **TypeScript** | 支持有限 | 原生支持 |
+| **性能** | 优秀 | 更优（体积更小、更快） |
+| **新特性** | - | Teleport、Suspense、Fragments |
+
+## 推荐解决方案
+
+| 方案 | 适用场景 | 链接 |
+|------|----------|------|
+| Vue3 + Vant H5 模板 | 移动端 H5 开发 | [GitHub](https://github.com/easy-temps/vue3-vant-mobile) |
+| warm-flow 工作流 | 工作流引擎 | [GitHub](https://github.com/jspao/warm-flow) |
 
 - [H5解决方案 Vue3 + vant](https://github.com/easy-temps/vue3-vant-mobile)
 - [warm-flow工作流解决方案](https://github.com/jspao/warm-flow)
 
-## Vue3 iframe 监听
+## 实用技巧
+
+### Vue 3 iframe 加载监听
 
 ::: code-group
 
@@ -67,9 +86,9 @@ onMounted(() => {
 
 :::
 
-## Vue mitt
+### 全局事件总线（mitt）
 
-`eventBus` 替代品 `mitt`
+Vue 3 中移除了 `$on`、`$off` 等事件总线 API，推荐使用 `mitt` 作为替代方案。
 
 `on` 方法添加事件，`off` 方法移除，`clear` 清空所有
 
@@ -100,7 +119,9 @@ emitter.on("foo", onFoo); // 监听
 emitter.off("foo", onFoo); // 移除
 ```
 
-## Vue VueUse onClickOutside
+### 点击外部检测（VueUse）
+
+使用 VueUse 的 `onClickOutside` 实现点击组件外部关闭的功能，常用于下拉菜单、模态框等场景。
 
 [VueUse onClickOutside Demo](https://vueuse.org/core/onClickOutside/#onclickoutside)
 
@@ -179,7 +200,7 @@ const handleEditor = () => {
 
 :::
 
-## Vue2 Echarts5.x
+### Vue 2 + ECharts 5.x
 
 - `"echarts": "^5.5.0"`
 - `"vue": "2.6.10"`
@@ -268,7 +289,7 @@ Vue.prototype.$echarts = function (el) {
 
 :::
 
-## Vue3 ts Echarts5.x
+### Vue 3 + TypeScript + ECharts 5.x
 
 鸣谢: [vue3+Ts 项目按需引入 Echarts，并封装成 hooks](https://blog.csdn.net/ganyingxie123456/article/details/136741562)
 
@@ -546,7 +567,7 @@ const options = {
 </script>
 ```
 
-## Vue3 js Echarts5.x
+### Vue 3 + JavaScript + ECharts 5.x
 
 - `"echarts": "^5.5.1"`
 - `"vue": "^3.5.12"`

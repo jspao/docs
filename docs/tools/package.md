@@ -1,18 +1,72 @@
 # 包管理器
 
-常见的有 `npm`、`yarn`、`pnpm`，云智屏项目推荐使用 `pnpm` 或者 `yarn`。
+Node.js 生态有三种主流包管理器：npm、yarn 和 pnpm。
 
-## pnpm <Badge type="danger" text="推荐" />
+## 对比与选择
 
-pnpm - 速度快、节省磁盘空间的软件包管理器【[传送门](https://www.pnpm.cn/installation)】
+| 特性 | npm | yarn | pnpm |
+|------|-----|------|------|
+| 安装速度 | 一般 | 快 | 极快 |
+| 磁盘占用 | 大 | 大 | 小 |
+| 依赖管理 | 扁平化 | 扁平化 | 内容寻址 |
+| 离线模式 | 不支持 | 支持 | 支持 |
+| 推荐度 | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
 
-## yarn
+## pnpm <Badge type="tip" text="推荐" />
 
-Yarn 是一个软件包管理器，还可以作为项目管理工具。无论你是小型项目还是大型单体仓库（monorepos），无论是业余爱好者还是企业用户，Yarn 都能满足你的需求。【[传送门](https://www.yarnpkg.cn/)】
+[pnpm](https://www.pnpm.cn/) 是目前最推荐的包管理器：
+
+- **速度快** - 并行下载，充分利用网络
+- **省空间** - 全局存储，硬链接共享
+- **更严格** - 避免幽灵依赖问题
+
+```bash
+# 安装 pnpm
+npm install -g pnpm
+
+# 常用命令（与 npm 类似）
+pnpm install          # 安装依赖
+pnpm add <package>    # 添加依赖
+pnpm remove <package> # 移除依赖
+pnpm update           # 更新依赖
+pnpm run <script>     # 运行脚本
+```
+
+## Yarn
+
+[Yarn](https://www.yarnpkg.cn/) 由 Facebook 开发，特点是：
+
+- 离线安装支持
+- 确定性安装（yarn.lock）
+- 工作区支持（Monorepo）
+
+```bash
+# Yarn 经典版
+yarn install
+yarn add <package>
+yarn remove <package>
+
+# Yarn Berry (v2+)
+yarn set version stable
+```
 
 ## npm
 
-NPM 的全称是 Node Package Manager，是一个 `NodeJS 包管理和分发工具`，已经成为了非官方的发布 Node 模块（包）的标准。【[传送门](https://www.npmjs.com/)】
+[npm](https://www.npmjs.com/) 是 Node.js 自带的包管理器：
+
+```bash
+npm install           # 安装依赖
+npm install <package> # 添加依赖
+npm uninstall <package>
+npm update
+npm run <script>
+```
+
+::: tip 版本选择
+- 新项目：优先使用 **pnpm**
+- 老项目：保持原有管理器
+- Monorepo：考虑 **pnpm workspace** 或 **Yarn workspace**
+:::
 
 ## 解决老项目依赖版本对齐问题
 

@@ -1,338 +1,310 @@
-# PbootCMS
+# PbootCMS 开发指南
 
-[官网入口](https://www.pbootcms.com/)
+PbootCMS 是一款开源免费的 PHP 企业网站管理系统，以高效、简洁、易用为特点。系统采用简单的模板标签，只需掌握 HTML 即可快速开发企业网站。
 
-PbootCMS 是全新内核且永久开源免费的 PHP 企业网站开发建设管理系统，是一套高效、简洁、 强悍的可免费商用的 PHP CMS 源码，能够满足各类企业网站开发建设的需要。系统采用简单到想哭的模板标签，只要懂 HTML 就可快速开发企业网站。
+> **官方网站**：[PbootCMS 官网](https://www.pbootcms.com/)
 
-## 首页携带参数会引发301重定向问题
+## 核心特点
 
-1. 找到文件 `apps/home/controller/IndexController.php`
-2. 找到如下代码 `header("Location: " . $http . $_SERVER['HTTP_HOST'] . $matches1[0], true, 301);` 替换成 `$this->getIndexPage();`
-``` php
- if ($matches1[0]) {
-   if ($_SERVER['REQUEST_URI'] == $matches1[0]) {
-       $this->getIndexPage();
-   } elseif (strpos($matches1[0], '/?page=') !== false) {
-       $this->getIndexPage();
-   } else {
-       //读取后台首页404访问配置
-       if ($this->config('url_index_404') == 1) {
-           _404('您访问的页面不存在，请核对后重试！');
-       }
-       header("Location: " . $http . $_SERVER['HTTP_HOST'] . $matches1[0], true, 301);
-   }
+| 特点 | 说明 |
+|------|------|
+| **开源免费** | 永久开源，可商用 |
+| **模板简单** | 标签简洁，学习成本低 |
+| **功能完善** | 支持多语言、自定义表单、SEO 优化等 |
+| **扩展性强** | 支持二次开发和插件扩展 |
+
+## 常见问题与解决方案
+
+### 首页参数导致 301 重定向
+
+**问题描述**：首页 URL 携带参数时（如 `/?ref=xxx`），会触发 301 重定向。
+
+**解决方案**：
+
+1. 打开文件：`apps/home/controller/IndexController.php`
+2. 找到以下代码：
+   ```php
+   header("Location: " . $http . $_SERVER['HTTP_HOST'] . $matches1[0], true, 301);
+   ```
+3. 替换为：
+   ```php
+   $this->getIndexPage();
+   ```
+
+**修改后的完整代码**：
+```php
+if ($matches1[0]) {
+    if ($_SERVER['REQUEST_URI'] == $matches1[0]) {
+        $this->getIndexPage();
+    } elseif (strpos($matches1[0], '/?page=') !== false) {
+        $this->getIndexPage();
+    } else {
+        // 读取后台首页404访问配置
+        if ($this->config('url_index_404') == 1) {
+            _404('您访问的页面不存在，请核对后重试！');
+        }
+        // 修改这里：移除 301 跳转
+        $this->getIndexPage();
+    }
 } else {
-   _404('您访问的页面不存在，请核对后重试！');
+    _404('您访问的页面不存在，请核对后重试！');
 }
 ```
 
-## 支持Google广告跳转参数（内页）
+### 支持 Google 广告参数
 
-1. 找到文件 `apps/home/controller/IndexController.php`
-2. 找到如下代码，在增加`if`判断条件`&& stripos(URL,'/?gad_source') == false`,其它参数同理
-``` php
-if (stripos(URL, '?') !== false && stripos(URL, '/?tag=') == false && stripos(URL, '/?page=') == false && stripos(URL, '/?ext_') == false) {
-  _404('您访问的内容不存在，请核对后重试！');
-}
-```
+**问题描述**：Google 广告跳转参数（如 `?gad_source=xxx`）被系统拦截，导致 404 错误。
 
-## 多语言调用内容列表 API
+**解决方案**：
 
-标准[文档地址](https://www.pbootcms.com/docs/237.html)，在使用多语言且列表数据使用官方 api 【指定内容列表接口】来进行调用的话，需要添加`acode`字段，传输指定语言
+1. 打开文件：`apps/home/controller/IndexController.php`
+2. 找到以下代码：
+   ```php
+   if (stripos(URL, '?') !== false && stripos(URL, '/?tag=') == false && stripos(URL, '/?page=') == false && stripos(URL, '/?ext_') == false) {
+       _404('您访问的内容不存在，请核对后重试！');
+   }
+   ```
+3. 添加广告参数白名单（以 `gad_source` 为例）：
+   ```php
+   if (stripos(URL, '?') !== false 
+       && stripos(URL, '/?tag=') == false 
+       && stripos(URL, '/?page=') == false 
+       && stripos(URL, '/?ext_') == false
+       && stripos(URL, '/?gad_source') == false  // 添加这一行
+   ) {
+       _404('您访问的内容不存在，请核对后重试！');
+   }
+   ```
+
+::: tip 提示
+如需支持其他广告参数（如 `utm_source`、`fbclid` 等），按相同方式添加即可。
+:::
+
+### 多语言 API 调用
+
+**场景**：在多语言网站中，通过 API 获取指定语言的内容列表。
+
+**关键参数**：`acode` - 指定语言代码（如 `en`、`zh` 等）
+
+**参考文档**：[PbootCMS API 文档](https://www.pbootcms.com/docs/237.html)
 
 ```js
-$(document).ready(function (e) {
-  var url = "http://IP/api.php/list/*/page/2/num/12";
+$(document).ready(function () {
   $.ajax({
     type: "POST",
-    url: url,
+    url: "http://your-domain/api.php/list/*/page/2/num/12",
     dataType: "json",
     data: {
-      // 最重要的代码 acode 需要指定语言，如：en
+      // 关键：指定语言代码
       acode: 'en',
       appid: "{pboot:appid}",
       timestamp: "{pboot:timestamp}",
       signature: "{pboot:signature}",
     },
-
-    success: function (response, status) {
+    success: function (response) {
       if (response.code) {
-        //获取数据成功
-        alert(response.data.title);
+        console.log('数据获取成功：', response.data);
       } else {
-        //返回错误数据
-        alert(response.data);
+        console.error('错误：', response.data);
       }
     },
-    error: function (xhr, status, error) {
-      //返回数据异常
-      alert("返回数据异常！");
+    error: function () {
+      console.error('请求异常');
     },
   });
 });
 ```
 
-## 剔除 url 后的 /
+| 参数 | 说明 |
+|------|------|
+| `acode` | 语言代码，如 `en`、`zh`、`ja` 等 |
+| `appid` | 应用 ID，使用模板标签 `{pboot:appid}` 获取 |
+| `timestamp` | 时间戳，使用模板标签 `{pboot:timestamp}` 获取 |
+| `signature` | 签名，使用模板标签 `{pboot:signature}` 获取 |
 
-路径：`\core\basic`
+### 移除 URL 末尾的斜杠
 
-1. 找到 `Url.php` 文件
-2. 删除 `$suffix = '';` 后的 `/` 即可
+**修改路径**：`core/basic/Url.php`
 
-## sitemap 剔除部分菜单路径
+**操作步骤**：
+1. 打开 `Url.php` 文件
+2. 找到 `$suffix = '';` 这一行
+3. 删除该行末尾的 `/`（如果有）
 
-路径：`\apps\home\model\SitemapModel.php`
+**效果**：
+- 修改前：`http://example.com/about/`
+- 修改后：`http://example.com/about`
 
+### Sitemap 排除特定栏目
+
+**场景**：某些栏目（如测试页面、内部页面）不需要生成到 Sitemap 中。
+
+**修改路径**：`apps/home/model/SitemapModel.php`
+
+**操作步骤**：
 1. 找到代码 `a.status=1` 所在行
-2. 下行添加 `a.scode<>16` 16 为后台的栏目 ID，即表示 ID 为 16 的文章不生成 sitemap
+2. 在其下方添加排除条件：
+   ```php
+   // 排除栏目 ID 为 16 的内容
+   a.scode<>16
+   ```
 
-## {pboot:list} 无法加载全部字段
+**示例**：
+```php
+// 原代码
+where a.status=1
 
-添加`lfield`字段用以获取所有预制字段及扩展字段
+// 修改后（排除栏目 16 和 20）
+where a.status=1 
+  and a.scode<>16 
+  and a.scode<>20
+```
 
-```text
+### 列表加载全部字段
+
+**问题描述**：`{pboot:list}` 默认只加载部分字段，无法获取自定义扩展字段。
+
+**解决方案**：添加 `lfield="*"` 参数
+
+```html
+<!-- 加载所有字段（包括扩展字段） -->
 {pboot:list num=12 lfield="*"}
+    <p>标题：[list:title]</p>
+    <p>自定义字段：[list:custom_field]</p>
 {/pboot:list}
 ```
 
-## 自定义表单及留言表单上传附件功能
+| 参数值 | 说明 |
+|--------|------|
+| `lfield="*"` | 加载所有字段 |
+| `lfield="title,content"` | 仅加载指定字段（多个用逗号分隔） |
 
-[鸣谢：灵感来源](https://www.xiuzhanwang.com/pbootcms_sy/5727.html)
+### 自定义表单文件上传
 
-[参考文档](https://www.bejson.com/doc/layui/doc/modules/upload.html#options)
+为自定义表单和留言表单添加文件上传功能，基于 LayUI 的 Upload 模块实现。
 
-[LayUI 文件下载](../assets/pbootcms/layui-v2.2.5.zip)
+**参考资料**：
+- [LayUI Upload 文档](https://www.bejson.com/doc/layui/doc/modules/upload.html#options)
+- [实现思路参考](https://www.xiuzhanwang.com/pbootcms_sy/5727.html)
+- [LayUI 文件下载](../assets/pbootcms/layui-v2.2.5.zip)
 
-### 后台修改
+#### 后端配置
 
-1. 文件路径：`apps/home/controller/IndexController.php`
+**1. 添加上传接口**
 
-2. 新增上传入口函数
+打开 `apps/home/controller/IndexController.php`，添加上传方法：
 
 ```php
 public function upload() {
-  $upload = upload('upload');
-  if (is_array($upload)) {
-      json(1, $upload);
-  } else {
-      json(0, $upload);
-  }
+    $upload = upload('upload');
+    if (is_array($upload)) {
+        json(1, $upload);  // 上传成功
+    } else {
+        json(0, $upload);  // 上传失败
+    }
 }
 ```
 
-3. 如果想要后台自定义表单展示图片的话则修改文件：`/apps/admin/view/default/content/form.html`
+**2. 后台表单图片预览**
+
+如需在后台表单中显示上传的图片，修改 `/apps/admin/view/default/content/form.html`：
 
 ```php
 <tbody>
     {foreach $fields(key2,value2,num2)}
-      <tr>
+    <tr>
         <th>[value2->description]</th>
         {php} $field=$value2->name {/php}
         <td>
-        // 关键行代码
-        <script>
-          var fls = "[value->$field]"
-          if (fls.indexOf('/static/') >= 0) {
-            document.write("<a href=" + fls + " target='_blank'><img src=" + fls +" width='250' /></a>");
-          } else {
-            document.write(fls);
-          }
-        </script>
-    </td>
+            <!-- 图片预览代码 -->
+            <script>
+                var fls = "[value->$field]"
+                if (fls.indexOf('/static/') >= 0) {
+                    document.write("<a href=" + fls + " target='_blank'><img src=" + fls +" width='250' /></a>");
+                } else {
+                    document.write(fls);
+                }
+            </script>
+        </td>
     </tr>
     {/foreach}
-    <tr>
-      <th>时间</th>
-      <td>[value->create_time]</td>
-  </tr>
-  </tbody>
+</tbody>
 ```
 
-4. 如果是留言列表需要展示图片的话，则修改 `message.html` 即可
+**3. 留言列表图片预览**
 
-### 基础示例
+修改 `message.html` 文件，添加与上面相同的图片预览代码。
 
-这原本只是一个普通的 button，正是 upload 模块赋予了它“文件选择”的特殊技能。当然，你还可以随意定制它的样式，而不是只局限于按钮。
+#### 前端基础示例
+
+最简单的文件上传实现：
 
 ```html
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8" />
-    <title>upload模块快速使用</title>
-    <link rel="stylesheet" href="/static/build/layui.css" media="all" />
-  </head>
-  <body>
-    <button type="button" class="layui-btn" id="test1">
-      <i class="layui-icon">&#xe67c;</i>上传图片
+    <title>文件上传示例</title>
+    <link rel="stylesheet" href="/static/build/layui.css" />
+</head>
+<body>
+    <!-- 上传按钮 -->
+    <button type="button" class="layui-btn" id="uploadBtn">
+        <i class="layui-icon">&#xe67c;</i> 上传图片
     </button>
 
     <script src="/static/build/layui.js"></script>
     <script>
-      layui.use("upload", function () {
-        var upload = layui.upload;
+        layui.use('upload', function() {
+            var upload = layui.upload;
 
-        //执行实例
-        var uploadInst = upload.render({
-          elem: "#test1", //绑定元素
-          url: "/index.php?p=/index/upload", //上传接口
-          done: function (res) {
-            //上传完毕回调
-          },
-          error: function () {
-            //请求异常回调
-          },
+            // 初始化上传组件
+            upload.render({
+                elem: '#uploadBtn',           // 绑定按钮
+                url: '/index.php?p=/index/upload',  // 上传接口
+                done: function(res) {
+                    // 上传成功回调
+                    console.log('上传成功：', res);
+                },
+                error: function() {
+                    // 上传失败回调
+                    console.error('上传失败');
+                }
+            });
         });
-      });
     </script>
-  </body>
+</body>
 </html>
 ```
 
-### 支持参数
+#### 上传组件配置参数
 
-<table>
-	<thead>
-		<tr>
-			<th>参数选项</th>
-			<th>说明</th>
-			<th>类型</th>
-			<th>默认值</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>elem</td>
-			<td>指向容器选择器，如：elem: '#id'。也可以是DOM对象</td>
-			<td>string/object</td>
-			<td>-</td>
-		</tr>
-		<tr>
-			<td>url</td>
-			<td>服务端上传接口，返回的数据规范请详见下文</td>
-			<td>string</td>
-			<td>-</td>
-		</tr>
-		<tr>
-			<td>method</td>
-			<td>上传接口的 HTTP 类型</td>
-			<td>string</td>
-			<td>post</td>
-		</tr>
-		<tr>
-			<td>data
-			</td>
-			<td>请求上传接口的额外参数。如：data: {id: 'xxx'}
-				<br> 从 layui 2.2.6 开始，支持动态值，如: data: { id: function() { return $('#id').val(); } }
-			</td>
-			<td>object</td>
-			<td>-</td>
-		</tr>
-		<tr>
-			<td>headers</td>
-			<td>接口的请求头。如：<em>headers: {token: 'sasasas'}</em>。注：该参数为 layui 2.2.6 开始新增</td>
-      <td>-</td>
-      <td>-</td>
-		</tr>
-		<tr>
-			<td>accept</td>
-			<td>指定允许上传时校验的文件类型，可选值有：<em>images</em>（图片）、<em>file</em>（所有文件）、<em>video</em>（视频）、<em>audio</em>（音频）</td>
-			<td>string</td>
-			<td>images</td>
-		</tr>
-		<tr>
-			<td>acceptMime
-			</td>
-			<td>规定打开文件选择框时，筛选出的文件类型，值为用逗号隔开的 MIME 类型列表。如：
-				<br>
-				<em>acceptMime: 'image/*'</em>（只显示图片文件）
-				<br>
-				<em>acceptMime: 'image/jpg, image/png'</em>（只显示 jpg 和 png 文件）
-				<br>
-				<span>注：该参数为 layui 2.2.6 开始新增</span>
-			</td>
-			<td>string</td>
-			<td>images</td>
-		</tr>
-		<tr>
-			<td>exts</td>
-			<td>允许上传的文件后缀。一般结合 <em>accept</em> 参数类设定。假设 accept 为 file 类型时，那么你设置 <em>exts: 'zip|rar|7z'</em> 即代表只允许上传压缩格式的文件。如果 accept 未设定，那么限制的就是图片的文件格式</td>
-			<td>string</td>
-			<td>jpg|png|gif|bmp|jpeg</td>
-		</tr>
-		<tr>
-			<td>auto</td>
-			<td>是否选完文件后自动上传。如果设定 <em>false</em>，那么需要设置 <em>bindAction</em> 参数来指向一个其它按钮提交上传</td>
-			<td>boolean</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td>bindAction</td>
-			<td>指向一个按钮触发上传，一般配合 auto: false 来使用。值为选择器或DOM对象，如：bindAction: '#btn'</td>
-			<td>string/object</td>
-			<td>-</td>
-		</tr>
-		<tr>
-			<td>field</td>
-			<td>设定文件域的字段名</td>
-			<td>string</td>
-			<td>file</td>
-		</tr>
-		<tr>
-			<td>size</td>
-			<td>设置文件最大可允许上传的大小，单位 KB。不支持ie8/9</td>
-			<td>number</td>
-			<td>0（即不限制）</td>
-		</tr>
-		<tr>
-			<td>multiple</td>
-			<td>是否允许多文件上传。设置 <em>true</em>即可开启。不支持ie8/9</td>
-			<td>boolean</td>
-			<td>false</td>
-		</tr>
-		<tr>
-			<td>number</td>
-			<td>设置同时可上传的文件数量，一般配合 multiple 参数出现。
-				<br>注意：<em>该参数为 layui 2.2.3 开始新增</em>
-			</td>
-			<td>number</td>
-			<td>0（即不限制）</td>
-		</tr>
-		<tr>
-			<td>drag</td>
-			<td>是否接受拖拽的文件上传，设置 <em>false</em> 可禁用。不支持ie8/9</td>
-			<td>boolean</td>
-			<td>true</td>
-		</tr>
-		<tr>
-			<td colspan="4" style="text-align: center;">回调</td>
-		</tr>
-		<tr>
-			<td>choose</td>
-			<td>选择文件后的回调函数。返回一个object参数，详见下文</td>
-			<td>function</td>
-			<td>-</td>
-		</tr>
-		<tr>
-			<td>before</td>
-			<td>文件提交上传前的回调。返回一个object参数（同上），详见下文</td>
-			<td>function</td>
-			<td>-</td>
-		</tr>
-		<tr>
-			<td>done</td>
-			<td>执行上传请求后的回调。返回三个参数，分别为：<em>res</em>（服务端响应信息）、<em>index</em>（当前文件的索引）、<em>upload</em>（重新上传的方法，一般在文件上传失败后使用）。详见下文</td>
-			<td>function</td>
-			<td>-</td>
-		</tr>
-		<tr>
-			<td>error</td>
-			<td>执行上传请求出现异常的回调（一般为网络异常、URL 404等）。返回两个参数，分别为：<em>index</em>（当前文件的索引）、<em>upload</em>（重新上传的方法）。详见下文</td>
-			<td>function</td>
-			<td>-</td>
-		</tr>
-	</tbody>
-</table>
+| 参数 | 说明 | 类型 | 默认值 |
+|------|------|------|--------|
+| `elem` | 绑定元素的选择器或 DOM 对象 | string/object | - |
+| `url` | 服务端上传接口地址 | string | - |
+| `method` | HTTP 请求方法 | string | `post` |
+| `data` | 额外参数（支持动态值） | object | - |
+| `headers` | 请求头配置 | object | - |
+| `accept` | 文件类型：`images`/`file`/`video`/`audio` | string | `images` |
+| `acceptMime` | MIME 类型筛选，如 `image/*` | string | `images` |
+| `exts` | 允许的文件后缀，如 `jpg|png|gif` | string | `jpg\|png\|gif` |
+| `auto` | 是否自动上传 | boolean | `true` |
+| `bindAction` | 手动上传触发按钮（配合 `auto: false`） | string/object | - |
+| `field` | 文件字段名 | string | `file` |
+| `size` | 文件大小限制（KB），0 为不限制 | number | `0` |
+| `multiple` | 是否允许多文件上传 | boolean | `false` |
+| `number` | 同时上传文件数量限制 | number | `0` |
+| `drag` | 是否支持拖拽上传 | boolean | `true` |
+
+**回调函数**：
+
+| 回调 | 触发时机 | 参数 |
+|------|----------|------|
+| `choose` | 选择文件后 | 文件对象 |
+| `before` | 上传前 | 文件对象 |
+| `done` | 上传成功 | `res`, `index`, `upload` |
+| `error` | 上传失败 | `index`, `upload` |
 
 ### 实战演练 - 多选文件上传
 

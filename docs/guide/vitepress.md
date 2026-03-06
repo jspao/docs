@@ -1,79 +1,113 @@
-# 搭建 Vitepress 文档
+# VitePress 搭建指南
 
-本文记录，利用 vitepress 从 0 开始搭建的步骤，最终部署到 Github Pages，并通过自有域名访问。
+本教程将带你从零开始搭建 VitePress 文档站点，并部署到 GitHub Pages，同时配置自定义域名访问。
 
-[官方文档](https://vitepress.dev/zh/guide/what-is-vitepress)
+::: tip 官方资源
+- [VitePress 官方文档](https://vitepress.dev/zh/guide/what-is-vitepress)
+- [GitHub 仓库](https://github.com/vuejs/vitepress)
+:::
 
-## VitePress 是什么？
+## 什么是 VitePress？
 
-VitePress 是一个静态站点生成器 (SSG)，专为构建快速、以内容为中心的站点而设计。简而言之，VitePress 获取用 Markdown 编写的内容，对其应用主题，并生成可以轻松部署到任何地方的静态 HTML 页面。
+VitePress 是一个**静态站点生成器 (SSG)**，专为构建快速、以内容为中心的站点而设计。
 
-## Vitepress 准备工作
+**核心特点：**
+- 🚀 基于 Vite，启动和构建速度极快
+- 📝 使用 Markdown 编写内容
+- 🎨 内置美观的默认主题
+- 🔍 支持全文搜索
+- 📱 响应式设计，适配移动端
 
-1. 安装`nodejs`，[官网入口](https://nodejs.org)，建议下载 LTS 版本（稳定版）
-2. 安装`pnpm`，[中文官网入口](https://www.pnpm.cn)，[英文官网入口](https://pnpm.io/)，根据自己语言喜好选择
+## 环境准备
+
+在开始之前，请确保已安装以下工具：
+
+| 工具 | 版本要求 | 下载地址 |
+|------|---------|---------|
+| Node.js | LTS 版本（推荐） | [官网下载](https://nodejs.org) |
+| pnpm | 最新版 | [中文官网](https://www.pnpm.cn) / [英文官网](https://pnpm.io/) |
+
+::: tip 为什么选择 pnpm？
+- 安装速度快
+- 节省磁盘空间
+- 严格的依赖管理
+:::
 
 ## 安装 VitePress
 
-[官方步骤入口](https://vitepress.dev/zh/guide/getting-started)
+### 1. 安装依赖
+
+在项目目录下执行：
 
 ```sh
+# 安装 VitePress
 pnpm add -D vitepress
 ```
 
-安装完成后，还需要执行一次安装向导
+### 2. 初始化配置
+
+执行初始化向导：
 
 ```sh
 pnpm vitepress init
 ```
 
-将需要回答几个简单的问题：
+向导会询问以下问题：
 
 ```sh
-# 欢迎来到VitePress
 ┌  Welcome to VitePress!
-│  # 在哪里初始化项目
+│
 ◇  Where should VitePress initialize the config?
-│  ./docs
-│  # 网站标题
+│  ./docs              # 配置文件存放目录
+│
 ◇  Site title:
-│  My Awesome Project
-│  # 网站描述
+│  My Awesome Project  # 网站标题
+│
 ◇  Site description:
-│  A VitePress Site
-│  # 主题
+│  A VitePress Site    # 网站描述
+│
 ◆  Theme:
-│  ● Default Theme (Out of the box, good-looking docs) # 默认主题
-│  ○ Default Theme + Customization # 默认主题 + 自定义
-│  ○ Custom Theme # 自定义主题
+│  ● Default Theme (Out of the box, good-looking docs)  # 默认主题
+│  ○ Default Theme + Customization                       # 默认主题 + 自定义
+│  ○ Custom Theme                                        # 自定义主题
 └
 ```
 
-执行完向导以后，即可启动项目
+### 3. 启动项目
 
 ```sh
 pnpm docs:dev
 ```
 
-::: tip
-项目启动以后可以根据官网进行个性化配置，这里就不过多赘述了，网上一大堆脚程，可自行百度！但是要注意一点，推荐使用最新版本的 node，因为官方是会主动对齐最新 node 版本的，跟定最新不吃亏！
+::: tip 建议
+- 推荐使用最新版 Node.js，VitePress 会主动对齐最新版本
+- 初始化配置后续可在 `docs/.vitepress/config.js` 中修改
 :::
 
-## 目录结构
+## 项目目录结构
+
+推荐的项目组织方式：
 
 ```
-jspao
-├─ CNAME
-├─ README.md
-├─ docs # 注意这里，如果你也跟我一样将文档统一放到docs内进行管理，那么package.json中的配置请参考下面的
-│  ├─ .vitepress
-│  │  └─ config.js
-│  ├─ CNAME
-│  └─ tools
-│     └─ vscode.md
-├─ package.json
-└─ pnpm-lock.yaml
+jspao/                          # 项目根目录
+├── docs/                       # 文档目录
+│   ├── .vitepress/            # VitePress 配置
+│   │   ├── config.js          # 站点配置文件
+│   │   └── dist/              # 构建输出目录（自动生成）
+│   ├── guide/                 # 指南文档
+│   ├── tools/                 # 工具文档
+│   ├── technology/            # 技术文档
+│   └── public/                # 静态资源
+├── package.json               # 项目依赖
+├── pnpm-lock.yaml            # 锁定文件
+└── README.md                  # 项目说明
 ```
+
+::: tip 目录说明
+- `docs/` - 所有文档内容存放于此
+- `docs/.vitepress/` - VitePress 配置文件
+- `docs/public/` - 静态资源（图片、字体等）
+:::
 
 ## config.js 配置参考
 
@@ -156,9 +190,9 @@ export default {
 };
 ```
 
-## package.json 配置参考
+## package.json 配置
 
-之所以后面增加了 `docs` 是因为我的目录结构调整了一下， 我将文档内容进行统一管理，所以我的启动项应该是在 `docs` 内启动，即接下来`workflow`配置中的`path: docs/.vitepress/dist`路径
+根据目录结构调整 scripts：
 
 ```json
 {
@@ -175,31 +209,42 @@ export default {
 }
 ```
 
-## 部署到 Github Pages
-
-1. 准备一个 github 账号
-2. 准备一个 github 仓库，仓库名称随意，我见过的：`blog`，`Notes`，`doc`
-3. 如果需要使用独立域名的话，可以前往对应的域名厂商注册及购买，我常用的：[阿里云](https://wanwang.aliyun.com/domain/searchresult/)，[西部数码](https://www.west.cn/services/domain/)，[Godaddy](https://dcc.godaddy.com/)
-
-::: warning
-准备部署前，我们先来统一一下概念：比如我已经有了 Github 账号及名为 `blogs` 的仓库，且本地已经配置好了 Vitepress，同时也将本地的 Vitepress 项目 `push` 到 `blogs` 仓库了
+::: tip 配置说明
+- `docs:dev` - 启动开发服务器
+- `docs:build` - 构建生产环境（输出到 `docs/.vitepress/dist`）
+- `docs:preview` - 本地预览构建结果
 :::
 
-### 快速进入仓库
+## 部署到 GitHub Pages
 
-登录 Github 后，点击右上角头像，选择 `Your repositories`，选择 `blogs`，即可进入仓库
+### 前置准备
 
-### 配置 Actions
+1. **GitHub 账号** - 注册 [GitHub](https://github.com)
+2. **代码仓库** - 创建仓库（名称如 `blog`、`notes`、`docs` 均可）
+3. **自定义域名**（可选）- 在域名服务商处购买：
+   - [阿里云](https://wanwang.aliyun.com/domain/searchresult/)
+   - [西部数码](https://www.west.cn/services/domain/)
+   - [GoDaddy](https://dcc.godaddy.com/)
 
-1. 进入仓库后，进入顶部 `tab` 栏中的 `Actions` 选项，并点击 `set up a workflow yourself`，进入 `workflow` 配置页面
+::: warning 前提条件
+确保已完成：
+- ✅ 本地 VitePress 项目可正常运行
+- ✅ 项目已推送到 GitHub 仓库
+:::
 
-![Actions](assets/vitepress/vitepress_0.jpg)
+### 配置 GitHub Actions
 
-2. 配置 `workflow`
+#### 1. 进入 Actions 页面
 
-复制如下代码粘贴到 `main.yml` 中如下图，其中有一部分是需要配置的，请根据实际情况填写，具体请详看代码 `****` 部分
+登录 GitHub → 点击头像 → `Your repositories` → 选择你的仓库 → `Actions` 标签页 → `set up a workflow yourself`
 
-![Actions](assets/vitepress/vitepress_1.jpg)
+![Actions 入口](assets/vitepress/vitepress_0.jpg)
+
+#### 2. 创建工作流文件
+
+将以下配置粘贴到 `main.yml`（注意修改标注 `****` 的部分）：
+
+![Workflow 配置](assets/vitepress/vitepress_1.jpg)
 
 ```yaml
 # 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
@@ -270,49 +315,80 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-全部填写完成后点击右上角`绿色` 按钮 `Commit changes...` 触发`弹窗`进行提交，就会在在项目的 `.github/workflows` 目录中创建一个名为 `main.yml` 的文件
+填写完成后，点击右上角 `Commit changes...` 提交，将在 `.github/workflows/main.yml` 创建该文件。
 
-### 配置 Github Pages
+### 配置 GitHub Pages
 
-1. 进入`blogs`仓库后，进入顶部 `tab` 栏中的 `Settings`
-2. 选择 `Pages` 找到右侧的 `Branch`，对 `Branch` 配置一个 `main` 分支（你的项目如果在别的分支，那你就根据实际情况选择即可，我的是在 `main` 分支）
+#### 1. 进入 Pages 设置
 
-   ![Actions](assets/vitepress/vitepress_2.jpg)
+仓库 → `Settings` → `Pages`
 
-3. 分支配置好后就要配置项目文件夹，因为我将文档都存放到了 `docs` 内，所以这里我选择的路径是 `/docs`
+#### 2. 配置部署分支
 
-   ![Actions](assets/vitepress/vitepress_3.jpg)
+在 `Branch` 中选择 `main` 分支（根据你的实际情况选择）：
 
-4. 配置域名（因为 Github 为海外站点，所以解析到 Github 的域名不需要备案）填写好后点击 `save` 即可保存
+![分支配置](assets/vitepress/vitepress_2.jpg)
 
-   ![Actions](assets/vitepress/vitepress_4.jpg)
+#### 3. 配置文档路径
 
-5. 解析域名，每个域名商操作方式不一样，这里我只做了 `A` 记录（jspao.com），`CNAME` 记录（www.jspao.com），`AAAA` 记录（jspao.com）
+文档存放在 `docs` 目录，所以路径选择 `/docs`：
 
-   - `A` 记录有 4 个可选
+![路径配置](assets/vitepress/vitepress_3.jpg)
 
-     - 185.199.108.153
-     - 185.199.109.153
-     - 185.199.110.153
-     - 185.199.111.153
+#### 4. 配置自定义域名（可选）
 
-   - `AAAA` 记录有 4 个可选
+在 `Custom domain` 中填写你的域名，点击 `Save`：
 
-     - 2606:50c0:8000::153
-     - 2606:50c0:8001::153
-     - 2606:50c0:8002::153
-     - 2606:50c0:8003::153
+::: tip 域名备案说明
+GitHub Pages 服务器在海外，解析到 GitHub 的域名**无需备案**。
+:::
 
-   - `CNAME` 记录 有 2 个可选（USERNAME 换成你的 github 账号名称即可，在地址栏可以查看，比如`https://github.com/jspao/blog/settings/pages`，`jspao` 就是我的用户名了，以此类推，`USERNAME` 就改为`jspao`，如果是以公司为单位的话那么 ORGANIZATION 就替换成组织的账号即可）
-     - USERNAME.github.io
-     - ORGANIZATION.github.io
+![域名配置](assets/vitepress/vitepress_4.jpg)
 
-   ![Actions](assets/vitepress/vitepress_5.jpg)
+#### 5. 域名 DNS 解析
 
-6. 完成范例，所有操作结束之后如下如，可以点击 `Visit site` 访问 Github Pages 了
+在域名服务商处添加以下记录：
 
-   ![Actions](assets/vitepress/vitepress_6.jpg)
+**A 记录**（IPv4）：
+```
+185.199.108.153
+185.199.109.153
+185.199.110.153
+185.199.111.153
+```
 
-## 结语
+**AAAA 记录**（IPv6）：
+```
+2606:50c0:8000::153
+2606:50c0:8001::153
+2606:50c0:8002::153
+2606:50c0:8003::153
+```
 
-因为配置了 Github 的工作流，所以后续 vitepress 项目文档就可以实现 `push` 之后自动化部署了，省时省心省力！
+**CNAME 记录**（www 子域名）：
+```
+USERNAME.github.io  # 将 USERNAME 替换为你的 GitHub 用户名
+```
+
+![DNS 配置](assets/vitepress/vitepress_5.jpg)
+
+#### 6. 完成部署
+
+配置完成后，点击 `Visit site` 访问你的站点：
+
+![完成部署](assets/vitepress/vitepress_6.jpg)
+
+## 总结
+
+完成以上配置后，你的 VitePress 站点已实现**自动化部署**：
+
+1. 本地编写文档
+2. 提交代码到 `main` 分支
+3. GitHub Actions 自动构建并部署
+4. 访问你的站点查看最新内容
+
+::: tip 后续维护
+- 日常更新只需编辑 Markdown 文件并推送
+- 配置变更修改 `docs/.vitepress/config.js`
+- 静态资源放入 `docs/public` 目录
+:::
