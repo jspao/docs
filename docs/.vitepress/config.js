@@ -119,6 +119,7 @@ export default {
             collapsed: false,
             items: [
               { text: "包管理工具", link: "package" },
+              { text: "分支管理", link: "branch" },
               { text: "Git", link: "git" },
               { text: "pm2", link: "pm2" },
               { text: "nvm", link: "nvm" },
