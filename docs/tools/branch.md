@@ -105,7 +105,7 @@ tag v1.0.0 (正式上线)
 ### 流程图
 
 ```
-main (生产环境)
+tag v1.0.0 (线上运行版本)
     │
     ├── 1. 发现线上Bug
     ▼
@@ -132,8 +132,9 @@ tag v1.0.1 (热修复版本)
 ### 详细步骤
 
 1. **发现线上 Bug**
-   - 从 `main` 分支创建 `hotfix/问题描述`
+   - 从线上运行的 `tag` 创建 `hotfix/问题描述`
    - 命名示例：`hotfix/login-error`, `hotfix/data-loss`
+   - 命令示例：`git checkout -b hotfix/login-error v1.0.0`
 
 2. **紧急修复**
    - 在 hotfix 分支上快速修复问题
@@ -276,21 +277,26 @@ git branch -d release/1.0.0
 ### 热修复流程
 
 ```bash
-# 1. 从 main 创建 hotfix 分支
-git checkout main
-git pull origin main
-git checkout -b hotfix/critical-bug
+# 1. 从线上 tag 创建 hotfix 分支（确保基于精确的运行版本）
+git fetch origin --tags
+git checkout -b hotfix/critical-bug v1.0.0
 
-# 2. 修复完成后合并
+# 2. 修复问题并提交
+git add .
+git commit -m "fix: 修复关键Bug"
+
+# 3. 修复完成后合并到 main
 git checkout main
 git merge hotfix/critical-bug
 git tag -a v1.0.1 -m "Hotfix version 1.0.1"
 git push origin main --tags
 
+# 4. 同步合并到 develop
 git checkout develop
 git merge hotfix/critical-bug
 git push origin develop
 
+# 5. 删除 hotfix 分支
 git branch -d hotfix/critical-bug
 ```
 
