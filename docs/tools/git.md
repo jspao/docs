@@ -477,4 +477,5 @@ git push -u origin new-feature
 | `git merge branch` | 合并指定分支到当前分支 |
 | `git stash` | 暂存当前修改 |
 | `git stash pop` | 恢复暂存的修改 |
+| `git config --global fetch.prune true `| git fetch 就会自动删除这些旧的远程分支 |
 
