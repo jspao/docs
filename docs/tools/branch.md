@@ -177,8 +177,9 @@ hotfix/payment-error
     ▼
 hotfix/payment-error
     │
-    ├── 4a. 合并到main
-    ├── 4b. 合并到develop
+    ├── 4a. 合并到main (正常流程)
+    ├── 4b. 强制同步main (特殊情况：使用前询问清楚): git reset --hard hotfix/xxx
+    ├── 4c. 合并到develop
     ▼
 main + develop (同步修复)
     │
@@ -430,6 +431,29 @@ git push origin develop
 # 5. 删除 hotfix 分支
 git branch -d hotfix/critical-bug
 ```
+
+### 强制同步 main 到 hotfix 状态（谨慎使用）
+
+当 main 分支状态异常，需要将 main 强制重置到某个 hotfix 分支状态时：
+
+```bash
+git checkout main
+git reset --hard hotfix/payment-error
+git push origin main --force
+```
+
+**适用场景：**
+
+| 场景 | 说明 |
+|------|------|
+| main 作为基线分支 | main 分支包含不应上线的代码，需要强制回退到干净的 hotfix 状态 |
+| MR 无法完全覆盖 | 合并会产生冲突或残留，强制重置确保 main 与 hotfix 完全一致 |
+| 紧急修复 | 线上问题紧急，需要快速确保 main 处于正确的修复状态 |
+
+⚠️ **警告**：此操作会强制覆盖 main 分支历史，仅在紧急情况下且团队知晓时使用。操作前请确保：
+1. 已备份或确认 main 上的其他提交可以丢弃
+2. 团队其他成员知晓 main 历史被重置
+3. 相关功能分支基于最新的 main 重新调整
 
 ### 客户定制流程
 
