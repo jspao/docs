@@ -478,4 +478,4 @@ git push -u origin new-feature
 | `git stash` | 暂存当前修改 |
 | `git stash pop` | 恢复暂存的修改 |
 | `git config --global fetch.prune true `| git fetch 就会自动删除这些旧的远程分支 |
-
+| ` git fetch origin main && git merge origin/main` | 比如本地分支是 feature/xx，那么这条命令就是拉取main分支合并到你本地当前分支|
