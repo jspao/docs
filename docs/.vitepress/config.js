@@ -127,6 +127,7 @@ export default {
               { text: "Linux", link: "linux" },
               { text: "Docker", link: "docker" },
               { text: "ADB", link: "adb" },
+              { text: "Spec Kit + Superpowers", link: "superspec" },
               { text: "日常笔记", link: "common" },
             ],
           },
