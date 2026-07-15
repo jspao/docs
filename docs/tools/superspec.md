@@ -83,7 +83,127 @@ flowchart TB
 | Superpowers | Agent Skills（`SKILL.md`） | 更严的澄清/执行/测试/审查行为 |
 | superspec | Spec Kit 扩展 | 把上述阶段接到技能，并支持断点续跑 |
 
+## 安装与配置
+
+按顺序装齐三件套后，才能在项目里跑完整流程。前置：已安装 [uv](https://docs.astral.sh/uv/)，并使用支持 slash / 插件的 Coding Agent（下文以 **Cursor** 为例）。
+
+### 1. 安装 Spec Kit CLI
+
+```bash
+uv tool install specify-cli
+```
+
+验证：
+
+```bash
+specify --help
+```
+
+若要在已有仓库启用 Spec Kit（尚未初始化时）：
+
+```bash
+# 在项目根目录执行；--integration 按所用 Agent 选择（如 cursor / claude / copilot 等）
+specify init --here --integration cursor
+```
+
+### 2. 安装 Superpowers（Cursor）
+
+在 Cursor Agent 对话里执行：
+
+```text
+/add-plugin superpowers
+```
+
+也可在 Cursor 插件市场搜索 `superpowers` 安装。其他 Agent 见 [obra/superpowers](https://github.com/obra/superpowers)。
+
+::: tip 技能目录：优先项目内
+superspec 探测时**以项目目录为准**，找不到再回退到用户目录：
+
+1. **优先**：`<项目根>/.agents/skills/{skill-name}/SKILL.md`
+2. **回退**：`~/.agents/skills/{skill-name}/SKILL.md`
+
+项目里没有、但用户目录有时：照样能跑（用回退路径）。要把技能**正式纳入本仓库**时，用下面任一方式加入项目。
+:::
+
+#### 项目内没有 skill 时怎么加进来
+
+superspec 需要的关键技能目录名：`brainstorming`、`writing-plans`、`executing-plans`、`test-driven-development`、`subagent-driven-development`、`requesting-code-review`。
+
+**方式 A：从 obra/superpowers 克隆后拷贝（推荐，适合提交进仓库）**
+
+```bash
+# 在项目根目录
+git clone --depth 1 https://github.com/obra/superpowers.git /tmp/superpowers
+mkdir -p .agents/skills
+
+for s in brainstorming writing-plans executing-plans \
+         test-driven-development subagent-driven-development \
+         requesting-code-review; do
+  cp -R "/tmp/superpowers/skills/$s" ".agents/skills/$s"
+done
+
+# 确认
+ls .agents/skills/*/SKILL.md
+```
+
+**方式 B：软链本机已有技能（适合本机已 `/add-plugin`，不想重复拷贝）**
+
+```bash
+mkdir -p .agents/skills
+
+# 若技能已在用户目录
+for s in brainstorming writing-plans executing-plans \
+         test-driven-development subagent-driven-development \
+         requesting-code-review; do
+  [ -f "$HOME/.agents/skills/$s/SKILL.md" ] && \
+    ln -sfn "$HOME/.agents/skills/$s" ".agents/skills/$s"
+done
+```
+
+**方式 C：只链某一个缺的 skill**
+
+```bash
+mkdir -p .agents/skills
+ln -sfn "$HOME/.agents/skills/brainstorming" .agents/skills/brainstorming
+# 或: cp -R /tmp/superpowers/skills/brainstorming .agents/skills/
+```
+
+加完后跑 `/speckit.superspec.status`，应能看到对应技能被检测到（缓存见 `.specify/superpowers.yml`）。
+
+> 注意：目录名须与上表**完全一致**（区分大小写），且目录内必须有 `SKILL.md`。软链目标若只在你本机，协作者拉仓库后仍需各自准备技能；要共享请用方式 A 把文件提交进项目。
+
+### 3. 安装 superspec 扩展
+
+在**已初始化 Spec Kit 的项目根目录**执行：
+
+```bash
+specify extension add superspec
+```
+
+装好后会多出 `/speckit.superspec.*` 系列命令；superspec 会按上表路径探测 Superpowers（**项目内优先**），结果缓存到 `.specify/superpowers.yml`。
+
+### 4. 验证是否就绪
+
+在 Agent 会话中执行：
+
+```text
+/speckit.superspec.status
+```
+
+正常时应能看到宪章状态、各功能阶段进度，以及 Superpowers 技能探测情况，并给出建议的下一步指令。
+
+### 安装顺序小结
+
+```text
+uv tool install specify-cli          # Spec Kit CLI
+/add-plugin superpowers              # Superpowers（Cursor Agent）
+specify extension add superspec      # 桥接扩展（项目内）
+/speckit.superspec.status            # 自检 / 看进度
+```
+
 ## 阶段 → 指令
+
+Spec Kit 核心阶段 + superspec 桥接阶段对照如下。带 `superspec` 的指令会在探测到技能时加载 Superpowers，否则走扩展内置降级逻辑。
 
 | 阶段 | 指令 | 背后能力 |
 | ---- | ---- | -------- |
@@ -95,20 +215,30 @@ flowchart TB
 | **执行** | `/speckit.superspec.execute` | Superpowers → `executing-plans` + `test-driven-development` + `subagent-driven-development` |
 | **审查** | `/speckit.superspec.review` | Superpowers → `requesting-code-review` |
 
-随时可查进度：
+### superspec 相关指令（接 Superpowers）
 
-```text
-/speckit.superspec.status
-```
+| 指令 | 作用 | 优先加载的 Superpowers 技能 |
+| ---- | ---- | --------------------------- |
+| `/speckit.superspec.status` | 查看进度、技能探测结果，建议下一步 | —（自检 / 续跑入口） |
+| `/speckit.superspec.brainstorm` | 深挖边界情况，打磨 `spec.md` | `brainstorming` |
+| `/speckit.superspec.tasks` | 生成分阶段任务清单 `tasks.md` | `writing-plans` |
+| `/speckit.superspec.execute` | 按任务实现（TDD + 可派生子代理） | `executing-plans` + `test-driven-development` + `subagent-driven-development` |
+| `/speckit.superspec.review` | 对照规格 / 计划做代码审查 | `requesting-code-review` |
+
+> Spec Kit 自身仍提供：`/speckit.constitution`、`/speckit.specify`、`/speckit.plan`、`/speckit.tasks`、`/speckit.checklist` 等。日常一条龙里，任务 / 执行 / 审查优先用上表的 `superspec` 版本，才会真正吃到 Superpowers。
 
 ## 技能探测路径
 
-superspec 按以下顺序检测 Superpowers（**项目本地优先**）：
+superspec 探测顺序（**项目内优先，用户级回退**）：
 
-1. `.agents/skills/{skill-name}/SKILL.md`
-2. `~/.agents/skills/{skill-name}/SKILL.md`
+| 优先级 | 路径 | 用途 |
+| ------ | ---- | ---- |
+| 1（优先） | `.agents/skills/{skill-name}/SKILL.md` | 项目内技能，建议团队以此为准 |
+| 2（回退） | `~/.agents/skills/{skill-name}/SKILL.md` | 本机全局技能 |
 
-探测结果缓存在 `.specify/superpowers.yml`。
+同名技能会优先用项目内的，不会被用户目录覆盖。探测结果写入 `.specify/superpowers.yml`。
+
+装完仍检测不到时：确认技能是否落在上表路径（尤其是项目 `.agents/skills/`），或重启 Agent 后再跑 `/speckit.superspec.status`。
 
 ## 一条龙示例
 
