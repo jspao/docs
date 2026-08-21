@@ -64,7 +64,7 @@ templets/{theme}/
 | `{echo:field name="title"/}` | 自闭合 | 当前详情 / 单页文档字段 |
 | `{echo:channel name="name"/}` | 自闭合 | 当前栏目 |
 | `{echo:position/}` | 自闭合 | 面包屑（Bootstrap 5） |
-| `{echo:page/}` | 自闭合 | 列表分页（Bootstrap 5） |
+| `{echo:page/}` | 自闭合 / 块 | 列表分页（默认 Bootstrap 5，块写法可自定义） |
 | `{echo:form code="contact"/}` | 自闭合 | 按表单 code 输出并提交自定义表单 |
 | `{echo:nav}…{/echo:nav}` | 块 | 栏目导航 |
 | `{echo:banner}…{/echo:banner}` | 块 | 轮播 |
@@ -78,7 +78,7 @@ templets/{theme}/
 | `{echo:prev}…{/echo:prev}` / `{echo:next}…{/echo:next}` | 块 | 上下篇 |
 | `{echo:like}…{/echo:like}` | 块 | 相关内容 |
 | `{echo:guestbook}…{/echo:guestbook}` | 块 | 已回复留言 |
-| `{echo:if}…{/echo:if}` | 块 | 简单真值判断 |
+| `{echo:if}…{/echo:if}` | 块 | 真值 / 比较 / `{echo:else}` |
 
 ---
 
@@ -347,10 +347,22 @@ templets/{theme}/
 ```
 
 ::: warning 分页不会总出现
-`{echo:page/}` **仅当总条数超过每页条数（至少 2 页）时才输出**，否则为空。输出结构是 Bootstrap 5 的 `ul.pagination`。
+`{echo:page/}` **仅当总条数超过每页条数（至少 2 页）时才输出**，否则为空。自闭合输出 Bootstrap 5 的 `ul.pagination`。
 :::
 
 搜索页可直接放 `{echo:page/}`，链接形如 `/search?q=关键词&page=2`。
+
+成对写法可自定义 HTML（`article` 列表不一定要用）：
+
+```html
+{echo:page}
+  <a href="[field:prev_url/]">上一页</a>
+  [field:page/] / [field:pages/]
+  <a href="[field:next_url/]">下一页</a>
+{/echo:page}
+```
+
+块内字段：`page`、`pages`、`total`、`page_size`、`prev_url`、`next_url`、`index_url`、`has_prev`、`has_next`。
 
 ---
 
@@ -455,7 +467,7 @@ templets/{theme}/
 
 ### `{echo:if}` / `{/echo:if}`
 
-简单真值判断，**不是完整表达式引擎**。`condition` 写 `[field:name]` 或 `[field:name/]` 均可。
+简单真值与比较，**不是完整表达式引擎**。`condition` 写 `[field:name]` 或 `[field:name/]` 均可；比较支持 `==` `!=` `>` `>=` `<` `<=`，可用 `{echo:else}`。
 
 在 `{echo:list}` / `{echo:pics}` / `{echo:images}` / `{echo:sitemap}` 等块内，按**当前行**取值；块外按当前文档字段。
 
@@ -464,11 +476,11 @@ templets/{theme}/
 ```html
 {echo:if condition="[field:is_top]"}
   <span>置顶</span>
+{echo:else}
+  <span>普通</span>
 {/echo:if}
 
-{echo:if condition="[field:like_list]"}
-  <!-- 有相关内容才渲染整块 -->
-{/echo:if}
+{echo:if condition="[field:views] >= 10"}热门{/echo:if}
 ```
 
 ### `{echo:prev}` / `{echo:next}` / `{echo:like}`
@@ -595,7 +607,9 @@ JSON 字段：`name`、`phone`、`email`、`content`。关站时接口拒绝。
 
 属性：`code`（必填，对应 `cms_forms.code`）。表单不存在或已禁用、没有字段时输出空。
 
-标签会生成 `<form class="echo-cms-form">`、按字段类型输出 `input` / `textarea`，并内嵌提交脚本，POST 到 `/api/form/{code}`。
+字段类型：`text`、`textarea`、`number`、`email`、`select`、`radio`、`checkbox`、`date`。下拉/单选/多选在后台填逗号分隔选项。
+
+标签会生成 `<form class="echo-cms-form">`、按字段类型输出控件，并内嵌提交脚本，POST 到 `/api/form/{code}`。
 
 也可自己写表单，直接调接口：
 
