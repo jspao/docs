@@ -69,6 +69,7 @@ templets/{theme}/
 | `{echo:nav}…{/echo:nav}` | 块 | 栏目导航 |
 | `{echo:banner}…{/echo:banner}` | 块 | 轮播 |
 | `{echo:list}…{/echo:list}` | 块 | 已发布内容列表 |
+| `{echo:content}…{/echo:content}` | 块 | 指定单页栏目那一篇 |
 | `{echo:link}…{/echo:link}` | 块 | 友情链接 |
 | `{echo:lang}…{/echo:lang}` | 块 | 语言切换 |
 | `{echo:searchlist}…{/echo:searchlist}` | 块 | 搜索结果（仅搜索页） |
@@ -347,8 +348,43 @@ templets/{theme}/
 ```
 
 ::: warning 分页不会总出现
-`{echo:page/}` **仅当总条数超过每页条数（至少 2 页）时才输出**，否则为空。自闭合输出 Bootstrap 5 的 `ul.pagination`。
+总条数不超过每页条数时，`{echo:page/}` **不输出**。
 :::
+
+### `{echo:content}` / `{/echo:content}`
+
+按栏目标识输出**单页模型**栏目下那一条已发布内容（对标 Pboot `{pboot:content}`）。适合首页嵌「关于我们」等，不必再用 `{echo:list scode="about" num="1"}`。
+
+| 属性 | 默认 | 说明 |
+|------|------|------|
+| `scode` | （必填） | 栏目标识，如 `about`、`contact` |
+
+规则：栏目须绑定单页模型（`type=1`）且存在已发布未删除稿；否则整块为空，**不**降级成列表。块内字段与 `{echo:list}` 相同；`[field:url/]` 为栏目路径 `/{scode}`（有绝对外链时用外链）。单页自身模板（如 `article_page.htm`）继续用 `{echo:field}`。
+
+**首页嵌入关于我们**（可写在 `index.htm`）：
+
+```html
+{echo:content scode="about"}
+<section class="py-4">
+  <h2 class="h4">[field:title/]</h2>
+  <div class="text-secondary">[field:summary/]</div>
+  <a href="[field:url/]">了解更多</a>
+</section>
+{/echo:content}
+```
+
+正文富文本示例：
+
+```html
+{echo:content scode="about"}
+  <h2>[field:title/]</h2>
+  <div>[field:content html="1"/]</div>
+{/echo:content}
+```
+
+### `{echo:page/}` / `{echo:page}`…`{/echo:page}`
+
+`{echo:page/}` **仅当总条数超过每页条数（至少 2 页）时才输出**，否则为空。自闭合输出 Bootstrap 5 的 `ul.pagination`。
 
 搜索页可直接放 `{echo:page/}`，链接形如 `/search?q=关键词&page=2`。
 
