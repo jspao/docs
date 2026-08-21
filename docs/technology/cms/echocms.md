@@ -42,43 +42,49 @@ templets/{theme}/
 
 默认全部转义。正文、统计代码、页脚 HTML 需要 `html="1"`，否则会变成实体。
 
+::: warning 自闭合必须带 `/}`
+`/}` 是结束符（斜杠在 `}` 前），对标织梦 `{dede:field name='title'/}`，不是 Pboot 的 `{pboot:sitetitle}`。
+
+写成 `{echo:sitetplpath}` 引擎匹配不到，会原样出现在页面上。正确写法：`{echo:sitetplpath/}`。
+:::
+
 ---
 
 ## 标签速查
 
 | 标签 | 类型 | 用途 |
 |------|------|------|
-| `{echo:include}` | 自闭合 | 引入同主题片段 |
-| `{echo:sitetplpath}` | 自闭合 | 主题静态资源前缀 `/theme/{theme}` |
-| `{echo:sitepath}` | 自闭合 | 站点根路径（根域名部署时为空） |
-| `{echo:url}` | 自闭合 | 生成站内链接（本地 `?site=` 预览会自动带上） |
-| `{echo:global}` | 自闭合 | 站点设置 `cms_site_settings` |
-| `{echo:company}` | 自闭合 | 公司信息 `cms_site_company` |
-| `{echo:label}` | 自闭合 | 定制标签 `cms_labels` |
-| `{echo:field}` | 自闭合 | 当前详情 / 单页文档字段 |
-| `{echo:channel}` | 自闭合 | 当前栏目 |
-| `{echo:position}` | 自闭合 | 面包屑（Bootstrap 5） |
-| `{echo:page}` | 自闭合 | 列表分页（Bootstrap 5） |
-| `{echo:form}` | 自闭合 | 按表单 code 输出并提交自定义表单 |
-| `{echo:nav}` | 块 | 栏目导航 |
-| `{echo:banner}` | 块 | 轮播 |
-| `{echo:list}` | 块 | 已发布内容列表 |
-| `{echo:link}` | 块 | 友情链接 |
-| `{echo:lang}` | 块 | 语言切换 |
-| `{echo:searchlist}` | 块 | 搜索结果（仅搜索页） |
-| `{echo:sitemap}` | 块 | 网站地图主题页 |
-| `{echo:pics}` | 块 | 内容内置多图 `pics` |
-| `{echo:images}` | 块 | 模型扩展多图字段 |
-| `{echo:prev}` / `{echo:next}` | 块 | 上下篇 |
-| `{echo:like}` | 块 | 相关内容 |
-| `{echo:guestbook}` | 块 | 已回复留言 |
-| `{echo:if}` | 块 | 简单真值判断 |
+| `{echo:include file="head.htm"/}` | 自闭合 | 引入同主题片段 |
+| `{echo:sitetplpath/}` | 自闭合 | 主题静态资源前缀 `/theme/{theme}` |
+| `{echo:sitepath/}` | 自闭合 | 站点根路径（根域名部署时为空） |
+| `{echo:url path="/"/}` | 自闭合 | 生成站内链接（本地 `?site=` 预览会自动带上） |
+| `{echo:global name="site_title"/}` | 自闭合 | 站点设置 `cms_site_settings` |
+| `{echo:company name="company_name"/}` | 自闭合 | 公司信息 `cms_site_company` |
+| `{echo:label name="hotline"/}` | 自闭合 | 定制标签 `cms_labels` |
+| `{echo:field name="title"/}` | 自闭合 | 当前详情 / 单页文档字段 |
+| `{echo:channel name="name"/}` | 自闭合 | 当前栏目 |
+| `{echo:position/}` | 自闭合 | 面包屑（Bootstrap 5） |
+| `{echo:page/}` | 自闭合 | 列表分页（Bootstrap 5） |
+| `{echo:form code="contact"/}` | 自闭合 | 按表单 code 输出并提交自定义表单 |
+| `{echo:nav}…{/echo:nav}` | 块 | 栏目导航 |
+| `{echo:banner}…{/echo:banner}` | 块 | 轮播 |
+| `{echo:list}…{/echo:list}` | 块 | 已发布内容列表 |
+| `{echo:link}…{/echo:link}` | 块 | 友情链接 |
+| `{echo:lang}…{/echo:lang}` | 块 | 语言切换 |
+| `{echo:searchlist}…{/echo:searchlist}` | 块 | 搜索结果（仅搜索页） |
+| `{echo:sitemap}…{/echo:sitemap}` | 块 | 网站地图主题页 |
+| `{echo:pics}…{/echo:pics}` | 块 | 内容内置多图 `pics` |
+| `{echo:images}…{/echo:images}` | 块 | 模型扩展多图字段 |
+| `{echo:prev}…{/echo:prev}` / `{echo:next}…{/echo:next}` | 块 | 上下篇 |
+| `{echo:like}…{/echo:like}` | 块 | 相关内容 |
+| `{echo:guestbook}…{/echo:guestbook}` | 块 | 已回复留言 |
+| `{echo:if}…{/echo:if}` | 块 | 简单真值判断 |
 
 ---
 
 ## 路径与资源
 
-### `{echo:sitetplpath}`
+### `{echo:sitetplpath/}`
 
 当前主题静态资源 URL 前缀，值为 `/theme/{theme}`。
 
@@ -88,7 +94,7 @@ templets/{theme}/
 <script src="{echo:sitetplpath/}/bootstrap/js/bootstrap.bundle.min.js"></script>
 ```
 
-### `{echo:sitepath}`
+### `{echo:sitepath/}`
 
 站点根路径。部署在域名根时为空字符串，可以写成：
 
@@ -96,7 +102,7 @@ templets/{theme}/
 <link rel="icon" href="{echo:sitepath/}/favicon.ico">
 ```
 
-### `{echo:url}`
+### `{echo:url/}`
 
 生成站内链接。本地用 `?site=en` 预览时会自动带上站点参数。绝对 `http(s)://` 外链不会拼接 `?site=`。
 
@@ -108,7 +114,7 @@ templets/{theme}/
 
 属性：`path`（默认 `/`）。
 
-### `{echo:include}`
+### `{echo:include/}`
 
 引入同主题下相对路径片段，嵌套最多 5 层，禁止 `..` 和绝对路径。
 
@@ -122,7 +128,7 @@ templets/{theme}/
 
 ## 站点与公司信息
 
-### `{echo:global}`
+### `{echo:global/}`
 
 读取当前站点设置。统计代码、页脚 HTML 需要 `html="1"`。
 
@@ -169,7 +175,7 @@ templets/{theme}/
 {echo:global name="stat_footer" html="1"/}
 ```
 
-### `{echo:company}`
+### `{echo:company/}`
 
 读取 `cms_site_company`。
 
@@ -182,7 +188,7 @@ templets/{theme}/
 
 常用 `name`：`company_name`、`address`、`phone`、`mobile`、`email`、`fax`、`wechat_qr`、`mp_qr`、`whatsapp`。
 
-### `{echo:label}`
+### `{echo:label/}`
 
 读取定制标签 `cms_labels`（按 `name`）。适合热线、促销文案等后台可改、模板写死键名的短文本。
 
@@ -350,7 +356,7 @@ templets/{theme}/
 
 ## 栏目、详情字段、面包屑
 
-### `{echo:channel}`
+### `{echo:channel/}`
 
 当前栏目信息。列表页、详情页、单页可用。
 
@@ -360,7 +366,7 @@ templets/{theme}/
 <h1>{echo:channel name="name"/}</h1>
 ```
 
-### `{echo:field}`
+### `{echo:field/}`
 
 当前详情 / 单页文档字段。富文本必须 `html="1"`。`content` 且 `html="1"` 时会套用启用中的内链标签。
 
@@ -389,7 +395,7 @@ templets/{theme}/
 <div class="article-body">{echo:field name="content" html="1"/}</div>
 ```
 
-### `{echo:position}`
+### `{echo:position/}`
 
 面包屑，输出 Bootstrap 5：`<nav><ol class="breadcrumb">…</ol></nav>`。无属性。
 
@@ -579,7 +585,7 @@ document.getElementById('guestbook-form')?.addEventListener('submit', async (e) 
 
 JSON 字段：`name`、`phone`、`email`、`content`。关站时接口拒绝。
 
-### `{echo:form}`
+### `{echo:form/}`
 
 按表单标识输出 Bootstrap 表单，并提交到公开接口。后台需已创建并启用该表单。
 
