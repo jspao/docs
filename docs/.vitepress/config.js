@@ -102,6 +102,13 @@ export default {
             ],
           },
           {
+            text: "Echo CMS",
+            collapsed: false,
+            items: [
+              { text: "标签调用与案例", link: "cms/echocms" },
+            ],
+          },
+          {
             text: "快速建站技术",
             collapsed: false,
             items: [
