@@ -30,6 +30,8 @@
 
 字段：`name`、`phone`、`email`、`content`（content 必填）。
 
+后台「互动 → 留言 → 字段」可新增扩展字段（例如 `company`）。定义只决定提交时认哪些 `name`；HTML 仍写在 `guestbook.htm`，增加 `<input name="company" class="form-control">`。不要用 `{echo:form code="guestbook"/}` 提交留言。
+
 ---
 
 ## `{echo:guestbook}` / `{/echo:guestbook}`
