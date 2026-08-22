@@ -18,6 +18,7 @@
 | 公司信息 | company 标签 | `{echo:company}` | ✅ |
 | 定制标签 | `{label:xxx}` | `{echo:label}` | ✅ |
 | 页头 TDK | pagetitle 系列 | `{echo:pagetitle}` 等 | ✅ |
+| canonical / hreflang | 无内置 | `{echo:seohead}`（首页 hreflang） | ✅ |
 | 面包屑 | `{pboot:position}` 可配分隔符 | `{echo:position}` separator / indextext | ✅ |
 | 导航 | `{pboot:nav}` | `{echo:nav}` + `{echo:son}` | ✅ |
 | 当前栏目 | `{sort:xxx}` | `{echo:channel}` | ✅ |

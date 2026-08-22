@@ -55,10 +55,10 @@
 
 ### `{echo:httpurl/}` / `{echo:pageurl/}`
 
-当前完整域名与页面 URL（canonical、分享）。
+当前完整域名与当前请求 URL。页面规范地址请用下面的 `{echo:seohead/}`，不要把 `pageurl` 当 canonical。
 
 ```html
-<link rel="canonical" href="{echo:pageurl/}">
+{echo:qrcode string="{echo:pageurl/}"/}
 ```
 
 ### `{echo:qrcode/}` / `{echo:runtime/}`
@@ -70,17 +70,26 @@
 
 ---
 
-## 3. 页面 TDK
+## 3. 页面 TDK 与 Head
 
-对标 Pboot `{pboot:pagetitle}` / `{pagekeywords}` / `{pagedescription}`。
+对标 Pboot `{pboot:pagetitle}` / `{pagekeywords}` / `{pagedescription}`。搜索页 `pageKind=search` 标题带查询词；留言/地图等仍用站点 TDK。
 
 ```html
+<!-- templets/default/head.htm -->
+<html lang="{echo:pagelang/}">
 <title>{echo:pagetitle/}</title>
 <meta name="keywords" content="{echo:pagekeywords/}">
 <meta name="description" content="{echo:pagedescription/}">
+{echo:seohead/}
 ```
 
-无属性。引擎按页面类型（首页 / 列表 / 详情 / 单页 / 其它）自动组合站点、栏目、文档 SEO。导航品牌仍用 `{echo:global name="site_title"/}`。
+| 标签 | 说明 |
+|------|------|
+| `{echo:pagetitle/}` 等 | 按页类型组合站点 / 栏目 / 文档 SEO；无属性、转义 |
+| `{echo:pagelang/}` | `<html lang>`：`zhcn`→`zh-CN`，`en`→`en`，`ja`→`ja` 等 |
+| `{echo:seohead/}` | 绝对 canonical；搜索/部分页 `noindex,follow`；**仅首页**各语言站 `hreflang` + `x-default`（HTML 原文） |
+
+导航品牌仍用 `{echo:global name="site_title"/}`。内页不做 hreflang（各语言站内容不对照）。
 
 ---
 
