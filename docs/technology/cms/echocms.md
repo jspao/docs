@@ -203,23 +203,40 @@ templets/{theme}/
 
 ### `{echo:nav}` / `{/echo:nav}`
 
-栏目导航。默认取顶级栏目（`parent="0"`）。
+栏目导航。默认取顶级栏目（`parent="0"`）。有子栏目时用 `{echo:son}` 输出下拉，当前项带 `active`。
 
 | 属性 | 默认 | 说明 |
 |------|------|------|
 | `parent` | `0` | 父栏目 ID；`0` 表示顶级 |
 | `num` | `50` | 条数上限 |
 
-块内字段：`id`、`name`、`code`、`url`。
+块内字段：`id`、`name`、`code`、`url`、`haschild`、`dropdown_class`、`toggle_class`、`current`、`active_class`。
+
+`{echo:son}…{/echo:son}` 写在 `{echo:nav}` 里面：有子级才输出，没有则为空。
 
 **顶栏导航**（`head.htm`）：
 
 ```html
+{echo:if condition="[field:is_home/]"}
+<li class="nav-item"><a class="nav-link active" href="{echo:url path="/"/}" aria-current="page">首页</a></li>
+{echo:else}
 <li class="nav-item"><a class="nav-link" href="{echo:url path="/"/}">首页</a></li>
+{/echo:if}
 {echo:nav parent="0" num="12"}
-<li class="nav-item"><a class="nav-link" href="[field:url/]">[field:name/]</a></li>
+<li class="nav-item [field:dropdown_class/]">
+  <a class="nav-link [field:toggle_class/] [field:active_class/]" href="[field:url/]">[field:name/]</a>
+  {echo:if condition="[field:haschild/]"}
+  <ul class="dropdown-menu">
+    {echo:son}
+    <li><a class="dropdown-item [field:active_class/]" href="[field:url/]">[field:name/]</a></li>
+    {/echo:son}
+  </ul>
+  {/echo:if}
+</li>
 {/echo:nav}
 ```
+
+当前栏目或其子级会给父级也加上 `active`（橙色高亮）。桌面端悬停展开下拉，点击父级仍进入该栏目。
 
 **页脚快速入口**（`foot.htm`）：
 
