@@ -312,7 +312,7 @@ templets/{theme}/
 |------|------|------|
 | `scode` | 当前栏目 code | 栏目标识，如 `news`、`product` |
 | `num` | `10` | 每页条数；同时作为分页 `page_size` |
-| `order` | `published_at` | 仅 `id` / `sort` / `published_at` |
+| `order` | `published_at` | `id` / `sort` / `published_at` / `rand` |
 
 块内字段：内容主字段（`title`、`thumb`、`summary`、`published_at`、`author`、`url`、`is_top` 等）及扩展字段（可按名直接读）。内容若填了绝对地址 `outlink`，`[field:url/]` 直接输出该外链。
 
@@ -350,6 +350,19 @@ templets/{theme}/
 ::: warning 分页不会总出现
 总条数不超过每页条数时，`{echo:page/}` **不输出**。
 :::
+
+**详情页随机推荐**（`article_nav.htm`）：`order="rand"` 从当前栏目（或不写 `scode` 时的当前栏目）随机抽几条。不要和 `{echo:page/}` 同用；随机时也不会优先置顶。
+
+```html
+<div class="mt-4">
+  <h2 class="h6 mb-3">随机推荐</h2>
+  <ul class="list-unstyled mb-0">
+    {echo:list num="4" order="rand"}
+    <li class="mb-1"><a href="[field:url/]">[field:title/]</a></li>
+    {/echo:list}
+  </ul>
+</div>
+```
 
 ### `{echo:content}` / `{/echo:content}`
 
