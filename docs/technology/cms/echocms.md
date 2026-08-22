@@ -446,12 +446,28 @@ templets/{theme}/
 
 ### `{echo:channel/}`
 
-当前栏目信息。列表页、详情页、单页可用。
+当前栏目信息。列表页、详情页、单页可用。通过 `name` 读取字段。
 
-字段：`id`、`name`、`code`、`model_id`、`parent_id`。
+| name | 含义 |
+|------|------|
+| `name` | 栏目名称 |
+| `code` | 标识 |
+| `subtitle` | 副标题 |
+| `thumb` | 缩略图 URL |
+| `banner` | Banner / 大图 URL |
+| `seo_title` / `seo_keywords` / `seo_description` | 栏目 SEO |
+| `ext1` … `ext5` | 预留文本 |
 
 ```html
-<h1>{echo:channel name="name"/}</h1>
+<!-- templets/default/list_article.htm -->
+<section class="page-banner py-4">
+  <img class="page-banner-img" src="{echo:channel name="banner"/}" alt="">
+  <div class="container position-relative">
+    <h1 class="h3 mb-2">{echo:channel name="name"/}</h1>
+    <p class="channel-subtitle mb-2">{echo:channel name="subtitle"/}</p>
+    {echo:position/}
+  </div>
+</section>
 ```
 
 ### `{echo:field/}`
@@ -776,12 +792,18 @@ await fetch('/api/form/contact', {
 
 栏目 code 换成 `case`、`news` 即可复制出案例区和资讯区。
 
-### 列表页：栏目名 + 面包屑 + 列表 + 分页
+### 列表页：Banner + 栏目名 + 面包屑 + 列表 + 分页
 
 ```html
 {echo:include file="head.htm"/}
-<h1>{echo:channel name="name"/}</h1>
-{echo:position/}
+<section class="page-banner py-4">
+  <img class="page-banner-img" src="{echo:channel name="banner"/}" alt="">
+  <div class="container position-relative">
+    <h1 class="h3 mb-2">{echo:channel name="name"/}</h1>
+    <p class="channel-subtitle mb-2">{echo:channel name="subtitle"/}</p>
+    {echo:position/}
+  </div>
+</section>
 {echo:list num="10" order="published_at"}
   <a href="[field:url/]">[field:title/]</a>
 {/echo:list}
