@@ -460,7 +460,19 @@ templets/{theme}/
 
 面包屑，输出 Bootstrap 5：`<nav><ol class="breadcrumb">…</ol></nav>`。无属性。
 
+规则：`首页`（英文站 `Home`）+ 当前栏目。列表模型的**文章详情**再追加内容标题；**单页栏目**（如联系我们）栏目即页面，不重复追加标题。
+
+**单页**（`article_page.htm`）效果：首页 / 联系我们
+
 ```html
+<h1 class="h3 mb-2">{echo:field name="title"/}</h1>
+{echo:position/}
+```
+
+**文章详情**（`article_article.htm`）效果：首页 / 栏目名 / 文章标题
+
+```html
+<h1 class="h3 mb-2">{echo:field name="title"/}</h1>
 {echo:position/}
 ```
 
