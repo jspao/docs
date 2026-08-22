@@ -50,7 +50,7 @@
 {/echo:like}
 ```
 
-`like` 属性 `num` 默认 `5`。
+`like` 属性 `num` 默认 `5`。`[field:url/]` 规则同列表：外链优先，其次 URL 别名 `/{scode}/{filename}`，否则数字 ID。
 
 ---
 

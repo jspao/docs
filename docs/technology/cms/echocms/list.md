@@ -25,6 +25,8 @@
 
 块内常用：`title`、`thumb`、`summary`、`published_at`、`url`、`tags`、`is_top` 及扩展字段。
 
+`[field:url/]`：有外链用外链；填了 URL 别名则为 `/{scode}/{filename}`（如 `/product_cnc/xh-500`）；否则 `/{scode}/{id}`。
+
 `order="rand"` 随机抽取，不与 `{echo:page/}` 同用。
 
 字段修饰见 [公共标签 → 字段修饰](./common#_6-字段修饰)。
