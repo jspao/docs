@@ -137,6 +137,34 @@ templets/{theme}/
 
 ---
 
+## 页面级 SEO（TDK）
+
+### `{echo:pagetitle/}` / `{echo:pagekeywords/}` / `{echo:pagedescription/}`
+
+当前页 `<title>` 与 meta keywords / description（对标 Pboot）。引擎按页面类型组合站点 / 栏目 / 文档数据，输出转义。无属性。
+
+| pageKind | 场景 | 标题段（`-` 拼接，空段丢弃） |
+|----------|------|------------------------------|
+| `home` | 首页 | 站点标题、站点副标题 |
+| `list` | 栏目列表 | 栏目 SEO 标题或名称、站点标题、站点副标题 |
+| `content` | 文档详情 | 文档 SEO 标题或标题、栏目名称、站点标题、站点副标题 |
+| `about` | 单页 | 栏目 SEO 标题或文档标题或栏目名称、站点标题、站点副标题 |
+| `other` | 搜索、留言、网站地图等 | 站点标题、站点副标题 |
+
+keywords / description：列表用栏目 SEO（空则站点）；详情/单页用文档 SEO（空则站点）；其余用站点。
+
+**页头案例**（`templets/default/head.htm`）：
+
+```html
+<title>{echo:pagetitle/}</title>
+<meta name="keywords" content="{echo:pagekeywords/}">
+<meta name="description" content="{echo:pagedescription/}">
+```
+
+导航品牌仍用 `{echo:global name="site_title"/}`，不负责 `<title>`。
+
+---
+
 ## 站点与公司信息
 
 ### `{echo:global/}`
@@ -144,9 +172,8 @@ templets/{theme}/
 读取当前站点设置。统计代码、页脚 HTML 需要 `html="1"`。
 
 ```html
-<title>{echo:global name="site_title"/}</title>
+<span class="fw-bold">{echo:global name="site_title"/}</span>
 <meta name="keywords" content="{echo:global name="seo_keywords"/}">
-<meta name="description" content="{echo:global name="seo_description"/}">
 <link rel="icon" href="{echo:global name="site_favicon"/}">
 {echo:global name="stat_head" html="1"/}
 ```
@@ -171,9 +198,9 @@ templets/{theme}/
 **页头案例**（`head.htm`）：
 
 ```html
-<title>{echo:global name="site_title"/}</title>
-<meta name="keywords" content="{echo:global name="seo_keywords"/}">
-<meta name="description" content="{echo:global name="seo_description"/}">
+<title>{echo:pagetitle/}</title>
+<meta name="keywords" content="{echo:pagekeywords/}">
+<meta name="description" content="{echo:pagedescription/}">
 <link rel="icon" href="{echo:global name="site_favicon"/}">
 {echo:global name="stat_head" html="1"/}
 ```
