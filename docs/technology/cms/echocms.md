@@ -18,6 +18,7 @@ templets/{theme}/
 ├── list_{model}.htm       # 栏目列表
 ├── article_{model}.htm    # 文档详情 / 单页
 ├── guestbook.htm          # 在线留言
+├── success.htm            # 留言提交成功页（可缺，缺则系统内置页）
 ├── search.htm             # 全站搜索
 ├── sitemap.htm            # 网站地图页（路由 /sitemap）
 ├── close.htm              # 关站提示
@@ -66,6 +67,10 @@ templets/{theme}/
 | `{echo:position/}` | 自闭合 | 面包屑（Bootstrap 5） |
 | `{echo:page/}` | 自闭合 / 块 | 列表分页（默认 Bootstrap 5，块写法可自定义） |
 | `{echo:form code="contact"/}` | 自闭合 | 按表单 code 输出并提交自定义表单 |
+| `{echo:msgaction/}` | 自闭合 | 留言表单提交地址 |
+| `{echo:checkcode/}` | 自闭合 | 留言验证码图片地址 |
+| `{echo:formtoken/}` | 自闭合 | 留言 CSRF 隐藏域 |
+| `{echo:msgresult/}` | 自闭合 | 留言失败提示 |
 | `{echo:nav}…{/echo:nav}` | 块 | 栏目导航 |
 | `{echo:banner}…{/echo:banner}` | 块 | 轮播 |
 | `{echo:list}…{/echo:list}` | 块 | 已发布内容列表 |
@@ -637,16 +642,50 @@ templets/{theme}/
 
 块内字段：`name`、`content`、`reply`、`replied_at`、`created_at`。
 
-提交本身不是标签，走公开接口 `POST /api/guestbook`。
+默认皮肤用原生 HTML POST，不要手写 `fetch`。案例摘自 `templets/default/guestbook.htm`。
+
+| 标签 | 输出 |
+|------|------|
+| `{echo:msgaction/}` | 提交地址 `/guestbook`（预览带 `?site=`） |
+| `{echo:checkcode/}` | 验证码图片地址 `/checkcode` |
+| `{echo:msgcodestatus/}` | `1` 开启 / `0` 关闭 |
+| `{echo:formtoken/}` | CSRF 隐藏域 |
+| `{echo:msgresult/}` | 失败提示 |
+
+`[field:msgcodestatus]` 供 `{echo:if}` 使用（`0` 为假）。成功后跳转主题 `success.htm`（没有则用系统内置页）。
 
 ```html
-<form id="guestbook-form">
-  <input name="name" required>
-  <input name="phone">
-  <input name="email" type="email">
-  <textarea name="content" required></textarea>
-  <button type="submit">提交留言</button>
+<form action="{echo:msgaction/}" method="post">
+  {echo:formtoken/}
+  <div class="mb-3">
+    <label class="form-label" for="gb-name">姓名</label>
+    <input class="form-control" id="gb-name" name="name" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="gb-phone">电话</label>
+    <input class="form-control" id="gb-phone" name="phone">
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="gb-email">邮箱</label>
+    <input class="form-control" id="gb-email" name="email" type="email">
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="gb-content">内容</label>
+    <textarea class="form-control" id="gb-content" name="content" rows="5" required></textarea>
+  </div>
+  {echo:if condition="[field:msgcodestatus]"}
+  <div class="mb-3">
+    <label class="form-label" for="gb-checkcode">验证码</label>
+    <div class="d-flex gap-2 align-items-center">
+      <input class="form-control" id="gb-checkcode" name="checkcode" required autocomplete="off">
+      <img src="{echo:checkcode/}" alt="验证码" width="120" height="40"
+           onclick="this.src=this.src.split('?')[0]+'?'+Date.now()" style="cursor:pointer">
+    </div>
+  </div>
+  {/echo:if}
+  <button class="btn btn-primary" type="submit">提交留言</button>
 </form>
+<p class="form-text mb-0 mt-3 text-danger">{echo:msgresult/}</p>
 
 {echo:if condition="[field:guestbook_list]"}
   {echo:guestbook}
@@ -657,23 +696,9 @@ templets/{theme}/
   </div>
   {/echo:guestbook}
 {/echo:if}
-
-<script>
-document.getElementById('guestbook-form')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const body = Object.fromEntries(new FormData(e.target).entries());
-  const res = await fetch('/api/guestbook', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const json = await res.json();
-  // json.code === 0 为成功
-});
-</script>
 ```
 
-JSON 字段：`name`、`phone`、`email`、`content`。关站时接口拒绝。
+字段：`name`、`phone`、`email`、`content`（`content` 必填）。JSON `POST /api/guestbook` 仍可用，默认皮肤不再调用。
 
 ### `{echo:form/}`
 
@@ -775,7 +800,7 @@ await fetch('/api/form/contact', {
 
 ### 单页（关于我们）：正文 + 侧栏公司信息 + 留言表单
 
-见 `article_page.htm`：左侧 `{echo:field name="content" html="1"/}`，右侧 `{echo:company}` 与手写 `POST /api/guestbook`。
+见 `article_page.htm`：左侧 `{echo:field name="content" html="1"/}`，右侧 `{echo:company}` 与原生留言表单（`{echo:msgaction/}`）。
 
 ---
 
@@ -783,7 +808,8 @@ await fetch('/api/form/contact', {
 
 | 能力 | 接口 | 说明 |
 |------|------|------|
-| 在线留言 | `POST /api/guestbook` | JSON：`name`、`phone`、`email`、`content` |
+| 在线留言（默认皮肤） | 原生 `POST /guestbook` | `{echo:msgaction/}`；成功进 `success.htm` |
+| 在线留言（JSON，可选） | `POST /api/guestbook` | JSON：`name`、`phone`、`email`、`content`；不加验证码 |
 | 自定义表单 | `POST /api/form/{code}` | JSON 字段名与表单定义一致；关站拒绝；按 IP 限流 |
 | 网站地图 XML | `GET /sitemap.xml` | 给搜索引擎；主题页是 `/sitemap` |
 
