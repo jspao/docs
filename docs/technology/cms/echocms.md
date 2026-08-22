@@ -107,6 +107,43 @@ keywords / description：列表看栏目 SEO，详情看文档 SEO，都没有�
 
 ---
 
+### `{echo:channel/}`
+
+当前栏目信息。列表页、详情页、单页可用。通过 `name` 属性读取字段。
+
+| name | 含义 |
+|------|------|
+| `name` | 栏目名称 |
+| `code` | 标识 |
+| `subtitle` | 副标题 |
+| `thumb` | 缩略图 URL |
+| `banner` | Banner / 大图 URL |
+| `seo_title` / `seo_keywords` / `seo_description` | 栏目 SEO |
+| `ext1` … `ext5` | 预留文本 |
+
+**真实皮肤**（`templets/default/list_article.htm`）：
+
+```html
+<section class="page-banner py-4">
+  <img class="page-banner-img" src="{echo:channel name="banner"/}" alt="">
+  <div class="container position-relative">
+    <h1 class="h3 mb-2">{echo:channel name="name"/}</h1>
+    <p class="channel-subtitle mb-2">{echo:channel name="subtitle"/}</p>
+    {echo:position/}
+  </div>
+</section>
+```
+
+**可复制案例**（副标题 + Banner）：
+
+```html
+<h1>{echo:channel name="name"/}</h1>
+<p>{echo:channel name="subtitle"/}</p>
+<img src="{echo:channel name="banner"/}" alt="">
+```
+
+---
+
 ### 栏目列表页：Banner + 列表 + 分页
 
 ```html
