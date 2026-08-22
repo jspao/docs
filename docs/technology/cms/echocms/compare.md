@@ -34,7 +34,10 @@
 | 验证码开关 | checkcodestatus | `{echo:msgcodestatus}` | ✅ |
 | 自定义表单 | form | `{echo:form}` | ✅ |
 | 多语言 | lg / lang | `{echo:lang}` | ✅ |
-| 搜索 | search | `{echo:searchlist}` | ✅ |
+| 搜索 | search | `{echo:searchlist}` + `?tag=` | ✅ |
+| **内容 tags** | `{pboot:tags}` | `{echo:tags}` | ✅ |
+| **多选字段遍历** | checkbox 扩展 | `{echo:checkbox}` | ✅ |
+| **多条件筛选** | 栏目+标签+字段 | `tags` / `ext_field` / `?tag=` | ✅ |
 | 站点地图 | sitemap / xml | 块 + `/sitemap.xml` | ✅ |
 | 条件 | if | `{echo:if}` | ✅ |
 | 上下篇 / 相关 | 部分主题内置 | prev / next / like | ✅ |
@@ -57,9 +60,6 @@
 
 | 能力 | 说明 | **是否建议补** |
 |------|------|----------------|
-| **内容 tags** | 文章标签云 | 中期 — 需内容模型支持 |
-| **多选字段遍历** | checkbox 扩展 | 低优 |
-| **多条件筛选** | 栏目+字段筛选 | 中期 |
 | **会员 / 评论** | 用户体系 | **不做** — 企业站非核心 |
 | **万能 SQL / Loop** | 任意 SQL | **不做** — 安全与维护成本 |
 
@@ -67,4 +67,4 @@
 
 | 能力 | 说明 |
 |------|------|
-| 指定栏目 / 字段修饰 / 日期 format / httpurl / pageurl / position 参数 / mark / 缩略图 / qrcode / runtime | 均已支持，详见各子页 |
+| 指定栏目 / 字段修饰 / 日期 format / httpurl / pageurl / position 参数 / mark / 缩略图 / qrcode / runtime / 内容 tags / checkbox 遍历 / 列表筛选 | 均已支持，详见各子页 |

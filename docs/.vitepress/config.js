@@ -114,6 +114,7 @@ export default {
               { text: "内容列表", link: "cms/echocms/list" },
               { text: "分页条", link: "cms/echocms/pagination" },
               { text: "内容详情", link: "cms/echocms/detail" },
+              { text: "内容标签", link: "cms/echocms/tags" },
               { text: "指定内容", link: "cms/echocms/content" },
               { text: "幻灯片", link: "cms/echocms/banner" },
               { text: "友情链接", link: "cms/echocms/link" },

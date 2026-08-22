@@ -51,3 +51,19 @@
 ```
 
 `like` 属性 `num` 默认 `5`。
+
+---
+
+## `{echo:tags}` / `{echo:checkbox}`
+
+文章标签与多选扩展字段见 [内容标签](./tags) 与下方 checkbox。
+
+```html
+{echo:tags}
+  <a href="[tags:link/]">[tags:text/]</a>
+{/echo:tags}
+
+{echo:checkbox name="features"}
+  <span class="badge">[field:text/]</span>
+{/echo:checkbox}
+```
