@@ -47,6 +47,8 @@ templets/{theme}/
 `/}` 是结束符（斜杠在 `}` 前），对标织梦 `{dede:field name='title'/}`，不是 Pboot 的 `{pboot:sitetitle}`。
 
 写成 `{echo:sitetplpath}` 引擎匹配不到，会原样出现在页面上。正确写法：`{echo:sitetplpath/}`。
+
+漏写 `/` 又放在 `action="{echo:url path="/search"}"` 这类 HTML 属性里时，内部双引号会截断属性，浏览器会请求 `/{echo:url path=` 并 404。
 :::
 
 ---
@@ -116,6 +118,9 @@ templets/{theme}/
 <a href="{echo:url path="/"/}">首页</a>
 <a href="{echo:url path="/product"/}">产品中心</a>
 <a href="{echo:url path="/news"/}">新闻资讯</a>
+<form class="d-flex ms-lg-2 mt-2 mt-lg-0 site-nav-search" method="get" action="{echo:url path="/search"/}" role="search">
+  <input class="form-control form-control-sm" type="search" name="q" placeholder="搜索" aria-label="搜索">
+</form>
 ```
 
 属性：`path`（默认 `/`）。
