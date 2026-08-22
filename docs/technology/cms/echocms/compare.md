@@ -18,10 +18,10 @@
 | 公司信息 | company 标签 | `{echo:company}` | ✅ |
 | 定制标签 | `{label:xxx}` | `{echo:label}` | ✅ |
 | 页头 TDK | pagetitle 系列 | `{echo:pagetitle}` 等 | ✅ |
-| 面包屑 | `{pboot:position}` 可配分隔符 | `{echo:position}` 固定 Bootstrap | ⚠️ |
+| 面包屑 | `{pboot:position}` 可配分隔符 | `{echo:position}` separator / indextext | ✅ |
 | 导航 | `{pboot:nav}` | `{echo:nav}` + `{echo:son}` | ✅ |
 | 当前栏目 | `{sort:xxx}` | `{echo:channel}` | ✅ |
-| **指定栏目** | `{pboot:sort scode=}` | 无 | ❌ |
+| **指定栏目** | `{pboot:sort scode=}` | `{echo:channel scode=}` | ✅ |
 | 内容列表 | `{pboot:list}` | `{echo:list}` | ✅ |
 | 分页 | `{pboot:page}` | `{echo:page}` | ✅ |
 | 内容详情 | `{content:xxx}` | `{echo:field}` | ✅ |
@@ -38,34 +38,32 @@
 | 条件 | if | `{echo:if}` | ✅ |
 | 上下篇 / 相关 | 部分主题内置 | prev / next / like | ✅ |
 
-## Pboot 有、Echo 暂无
+## Pboot 有、Echo 已补齐（2026-08）
+
+| 能力 | Echo 写法 |
+|------|-----------|
+| **指定栏目** | `{echo:channel scode="about" name="banner"/}` |
+| **字段修饰** | `[field:title len="30" drophtml="1"/]`、`{echo:field name="title" len="30"/}` |
+| **时间格式化** | `style="Y-m-d"` 或 `format="Y-m-d"` |
+| **当前完整 URL** | `{echo:httpurl/}`、`{echo:pageurl/}` |
+| **面包屑参数** | `{echo:position separator=" &gt; " indextext="首页"/}` |
+| **搜索标红** | `[field:title mark="1"/]`（搜索页） |
+| **图片缩放** | `width` / `height` → `/thumb?src=&w=&h=` |
+| **二维码** | `{echo:qrcode string="…"/}` |
+| **运行时间** | `{echo:runtime/}` |
+
+## Pboot 有、Echo 仍暂无
 
 | 能力 | 说明 | **是否建议补** |
 |------|------|----------------|
-| **指定栏目** `{sort scode=}` | 任意页读某栏目 name/banner/link | **建议** — `{echo:channel scode="about" name="banner"/}` |
-| **字段修饰** `len` `lencn` `drophtml` `substr` | 列表/详情截取、去 HTML | **建议** — 模板里最高频 |
-| **时间格式化** `style=Y-m-d` | 日期显示 | **建议** — 可先做 field/list 的 `format` 属性 |
-| **当前完整 URL** `httpurl` / `pageurl` |  canonical、分享 | **建议** — 轻量自闭合标签 |
-| **面包屑参数** separator / indextext | 自定义分隔符与首页文案 | 可选 |
-| **搜索关键字标红** `mark=1` | 搜索结果高亮 | 可选 |
-| **图片缩放** `width=` `height=` | 列表缩略图 | 可选 — 更宜 CDN/上传时生成 |
-| **二维码** `qrcode` | 动态二维码图 | 低优 — 前端库即可 |
-| **运行时间** `runtime` | 页脚调试 | 低优 |
 | **内容 tags** | 文章标签云 | 中期 — 需内容模型支持 |
 | **多选字段遍历** | checkbox 扩展 | 低优 |
 | **多条件筛选** | 栏目+字段筛选 | 中期 |
 | **会员 / 评论** | 用户体系 | **不做** — 企业站非核心 |
 | **万能 SQL / Loop** | 任意 SQL | **不做** — 安全与维护成本 |
 
-## 建议实施顺序（若补标签）
+## 历史缺口（已实施，见上表）
 
-1. **指定栏目** — 首页/侧栏读任意栏目 Banner、链接（对标 Pboot 最常用缺口）
-2. **字段修饰** — `[field:title len="30"]` 或 `{echo:field name="title" len="30"/}`（先 len + drophtml）
-3. **日期 format** — `format="Y-m-d"` 或 `style` 与 Pboot 对齐
-4. **httpurl / pageurl** — 分享与 SEO 辅助
-
-其余按产品需求排期；会员、SQL、评论不建议对标 Pboot 全量复制。
-
----
-
-确认要补哪几项后，可在 echo-cms 仓库提规格再开发；引擎变更需同步 `docs/templets-tags.md` 与本手册。
+| 能力 | 说明 |
+|------|------|
+| 指定栏目 / 字段修饰 / 日期 format / httpurl / pageurl / position 参数 / mark / 缩略图 / qrcode / runtime | 均已支持，详见各子页 |

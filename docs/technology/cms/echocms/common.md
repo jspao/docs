@@ -53,6 +53,21 @@
 `action="{echo:url path="/search"}"` 若漏写 `/}`，双引号会截断属性导致 404。
 :::
 
+### `{echo:httpurl/}` / `{echo:pageurl/}`
+
+当前完整域名与页面 URL（canonical、分享）。
+
+```html
+<link rel="canonical" href="{echo:pageurl/}">
+```
+
+### `{echo:qrcode/}` / `{echo:runtime/}`
+
+| 标签 | 说明 |
+|------|------|
+| `{echo:qrcode string="…"/}` | 输出二维码 `<img>`，请求 `/qrcode?text=` |
+| `{echo:runtime/}` | 渲染耗时（秒，4 位小数） |
+
 ---
 
 ## 3. 页面 TDK
@@ -89,3 +104,17 @@
 ```
 
 非完整表达式引擎；块内按当前行 `[field:xxx]` 取值。
+
+---
+
+## 6. 字段修饰
+
+可用于 `{echo:field}`、`{echo:channel}`、块内 `[field:…]`。
+
+```html
+[field:title len="30" drophtml="1"/]
+[field:published_at style="Y-m-d"/]
+{echo:field name="title" len="20"/}
+```
+
+常用：`len` / `lencn` / `drophtml` / `substr` / `style` / `format` / `width` / `height`（缩略图 `/thumb`）/ `mark`（搜索标红）。

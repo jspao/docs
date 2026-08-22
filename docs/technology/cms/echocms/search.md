@@ -11,8 +11,8 @@
 
 {echo:searchlist}
 <a href="[field:url/]">
-  <div>[field:title/]</div>
-  <div>[field:summary/]</div>
+  <div>[field:title mark="1"/]</div>
+  <div>[field:summary mark="1" len="80" drophtml="1"/]</div>
 </a>
 {/echo:searchlist}
 {echo:page/}
