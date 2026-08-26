@@ -30,3 +30,12 @@
 | `stat_head` / `stat_body_start` / `stat_footer` | 统计代码（需 html=1） |
 
 关站页 `close.htm` 另有：`close_title`、`close_site_note`（关站守卫注入）。
+
+拒绝页 `region.htm` 另有：`region_title`、`region_deny_note`（地区访问守卫注入，在后台「访问规则」勾选黑名单命中时使用）。
+
+```html
+<title>{echo:global name="region_title"/}</title>
+<p class="text-uppercase text-secondary small letter-spacing mb-2">{echo:global name="site_title"/}</p>
+<h1 class="h3 mb-3">{echo:global name="region_title"/}</h1>
+<p class="text-secondary mb-0">{echo:global name="region_deny_note"/}</p>
+```
