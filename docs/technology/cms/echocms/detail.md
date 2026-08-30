@@ -35,6 +35,8 @@
 {/echo:images}
 ```
 
+按素材库文件夹出图（荣誉墙、不绑某一篇内容）见 [素材库](./material) `{echo:material}`。
+
 ---
 
 ## `{echo:prev}` / `{echo:next}` / `{echo:like}`

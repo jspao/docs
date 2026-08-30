@@ -28,6 +28,7 @@
 | 内容详情 | `{content:xxx}` | `{echo:field}` | ✅ |
 | 指定单页内容 | content 标签 | `{echo:content}` | ✅ |
 | 多图 | pics 遍历 | `{echo:pics}` / `{echo:images}` | ✅ |
+| 素材库文件夹出图 | 无对应标签 | `{echo:material folder="…"}` | ✅ |
 | 幻灯片 | slide | `{echo:banner}` | ✅ |
 | 友情链接 | link | `{echo:link}` | ✅ |
 | 留言 | message 系列 | msgaction + guestbook | ✅ |

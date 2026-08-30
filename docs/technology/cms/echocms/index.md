@@ -47,6 +47,7 @@ templets/{theme}/
 | [内容详情](./detail) | field、多图、上下篇 |
 | [指定内容](./content) | content（单页栏目） |
 | [幻灯片](./banner) | banner |
+| [素材库](./material) | material（按文件夹出图） |
 | [友情链接](./link) | link |
 | [留言板](./guestbook) | 留言表单与列表 |
 | [自定义表单](./form) | form |

@@ -117,6 +117,7 @@ export default {
               { text: "内容标签", link: "cms/echocms/tags" },
               { text: "指定内容", link: "cms/echocms/content" },
               { text: "幻灯片", link: "cms/echocms/banner" },
+              { text: "素材库", link: "cms/echocms/material" },
               { text: "友情链接", link: "cms/echocms/link" },
               { text: "留言板", link: "cms/echocms/guestbook" },
               { text: "自定义表单", link: "cms/echocms/form" },
