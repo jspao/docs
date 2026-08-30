@@ -24,6 +24,8 @@
 | `parent` | `0` | 父栏目 ID，`0` 为顶级 |
 | `num` | `50` | 条数上限 |
 
+只输出 **启用且展示** 的栏目（`status=1` 且 `visible=1`）。隐藏栏目不出现在导航和 `{echo:son}`，但 URL、`{echo:list}` / `{echo:channel}` / `{echo:content}`、sitemap 仍可用。禁用栏目前台全部不可用，展示/隐藏无效。
+
 块内字段：`name`、`code`、`url`、`haschild`、`dropdown_class`、`toggle_class`、`active_class`。
 
 `{echo:son}…{/echo:son}` 只能写在 `{echo:nav}` 内，有子栏目才输出。
