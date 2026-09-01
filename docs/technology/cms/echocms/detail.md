@@ -69,3 +69,24 @@
   <span class="badge">[field:text/]</span>
 {/echo:checkbox}
 ```
+
+---
+
+## `{echo:texts}` / `{/echo:texts}`
+
+遍历内容模型「动态文本」字段（字符串数组）。旧数据若是换行整段，按行拆，不按逗号拆。无条目或未写 `name` 时整块为空。
+
+```html
+{echo:if condition="[field:specs]"}
+<h2 class="h5">技术参数</h2>
+<ul class="spec-list list-unstyled border rounded overflow-hidden mb-0">
+{echo:texts name="specs"}
+  <li class="px-3 py-2 small border-bottom mb-0">[field:text/]</li>
+{/echo:texts}
+</ul>
+{/echo:if}
+```
+
+摘自 `templets/default/article_product.htm`。块内：`[field:text/]` / `[field:value/]`、`[field:i/]`（从 1）、`[field:n/]`（从 0）。
+
+---

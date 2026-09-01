@@ -38,6 +38,7 @@
 | 搜索 | search | `{echo:searchlist}` + `?tag=` | ✅ |
 | **内容 tags** | `{pboot:tags}` | `{echo:tags}` | ✅ |
 | **多选字段遍历** | checkbox 扩展 | `{echo:checkbox}` | ✅ |
+| **动态文本遍历** | 无 | `{echo:texts}` | ✅ |
 | **多条件筛选** | 栏目+标签+字段 | `tags` / `ext_field` / `?tag=` | ✅ |
 | 站点地图 | sitemap / xml | 块 + `/sitemap.xml` | ✅ |
 | 条件 | if | `{echo:if}` | ✅ |
